@@ -1,7 +1,21 @@
 /*
-  Gadget Malawi — Component-specific styles
-  Only rules that are unique to a specific component or layout.
-  Base primitives live in globals.css.
+  Gadget Malawi — Component CSS
+  ============================================================
+  ONLY rules for isolated, feature-specific components.
+
+  This file OWNS ONLY:
+    - Splash screen
+    - Dashboard listing rows
+    - Footer
+    - Auth card
+    - User menu (header dropdown)
+
+  ⚠ Do NOT add rules for: header, filters, product cards,
+    hero, buttons, or any mobile layout. Those live in
+    globals.css. This file loads AFTER globals.css, so any
+    class defined here will override the same class in
+    globals.css — that's how the mobile filter bug happened.
+    Keep the two files disjoint.
 */
 
 /* ============================================================
@@ -49,126 +63,7 @@
 }
 
 /* ============================================================
-   2. HEADER — two-row layout
-   ============================================================ */
-
-.gm-header-main {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-}
-
-.gm-header-filters {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--gm-border);
-}
-
-.gm-header-brand { display: none; }
-.gm-header-search { flex: 1; max-width: 440px; }
-
-/* ============================================================
-   3. FILTER DROPDOWNS (in header)
-   ============================================================ */
-
-.gm-filter-trigger-wrap { position: relative; }
-
-.gm-filter-trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 36px;
-  padding: 0 14px;
-  border: 1px solid var(--gm-border);
-  border-radius: var(--gm-radius-pill);
-  background: var(--gm-surface-raised);
-  color: var(--gm-text-muted);
-  font-size: var(--gm-small-size);
-  font-weight: 700;
-  transition:
-    border-color var(--gm-transition),
-    background var(--gm-transition),
-    color var(--gm-transition);
-}
-.gm-filter-trigger:hover {
-  border-color: var(--gm-brand);
-  color: var(--gm-text);
-}
-.gm-filter-trigger.is-active {
-  border-color: var(--gm-brand);
-  background: var(--gm-brand-soft);
-  color: var(--gm-brand);
-}
-.gm-filter-trigger svg { font-size: 0.7em; opacity: 0.7; }
-
-.gm-filter-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  z-index: 80;
-  min-width: 220px;
-  max-height: 340px;
-  overflow-y: auto;
-  padding: 6px;
-  display: grid;
-  gap: 2px;
-  box-shadow: var(--gm-shadow);
-}
-.gm-filter-dropdown-price {
-  min-width: 260px;
-  padding: 14px;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.gm-filter-option {
-  padding: 9px 12px;
-  border: 0;
-  border-radius: var(--gm-radius-sm);
-  background: transparent;
-  color: var(--gm-text-muted);
-  font-size: var(--gm-small-size);
-  font-weight: 600;
-  text-align: left;
-  cursor: pointer;
-  transition: background var(--gm-transition), color var(--gm-transition);
-}
-.gm-filter-option:hover {
-  background: var(--gm-surface-hover);
-  color: var(--gm-text);
-}
-.gm-filter-option.is-selected {
-  background: var(--gm-brand-soft);
-  color: var(--gm-brand);
-  font-weight: 800;
-}
-
-.gm-filter-clear {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 36px;
-  padding: 0 12px;
-  border: 0;
-  border-radius: var(--gm-radius-pill);
-  background: transparent;
-  color: var(--gm-text-muted);
-  font-size: var(--gm-small-size);
-  font-weight: 700;
-  cursor: pointer;
-}
-.gm-filter-clear:hover {
-  color: var(--gm-danger);
-  background: color-mix(in srgb, var(--gm-danger) 8%, transparent);
-}
-
-/* ============================================================
-   4. DASHBOARD LISTING ROWS
+   2. DASHBOARD LISTING ROWS
    ============================================================ */
 
 .gm-listing-row {
@@ -274,7 +169,7 @@
 }
 
 /* ============================================================
-   5. FOOTER
+   3. FOOTER
    ============================================================ */
 
 .gm-footer {
@@ -348,7 +243,7 @@
 .gm-footer-legal a:hover { color: var(--gm-brand); }
 
 /* ============================================================
-   6. AUTH PAGES
+   4. AUTH CARD
    ============================================================ */
 
 .gm-auth-wrap {
@@ -359,7 +254,7 @@
 .gm-auth-card { width: 100%; max-width: 440px; }
 
 /* ============================================================
-   7. USER MENU (header)
+   5. USER MENU (header dropdown)
    ============================================================ */
 
 .gm-user-menu { position: relative; }
@@ -400,7 +295,7 @@
 }
 
 /* ============================================================
-   8. RESPONSIVE
+   6. RESPONSIVE — component-only rules
    ============================================================ */
 
 @media (max-width: 1180px) {
@@ -409,38 +304,11 @@
 }
 
 @media (max-width: 980px) {
-  .gm-header-brand { display: inline-flex; }
   .gm-footer-grid { grid-template-columns: 1fr 1fr; }
   .gm-footer-col:last-child { grid-column: auto; }
 }
 
-@media (max-width: 700px) {
-  .gm-header-main { gap: 10px; }
-  .gm-header-search { display: none; }
-
-  .gm-header-filters {
-    margin-top: 10px;
-    padding-top: 10px;
-    gap: 6px;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    scrollbar-width: none;
-  }
-  .gm-header-filters::-webkit-scrollbar { display: none; }
-
-  .gm-filter-trigger,
-  .gm-filter-clear {
-    min-height: 32px;
-    padding-inline: 12px;
-    font-size: 0.72rem;
-    white-space: nowrap;
-    flex: 0 0 auto;
-  }
-  .gm-filter-dropdown {
-    min-width: 200px;
-    max-width: calc(100vw - 28px);
-  }
-
+@media (max-width: 960px) {
   .gm-listing-row {
     grid-template-columns: 68px minmax(0, 1fr);
     gap: 12px;

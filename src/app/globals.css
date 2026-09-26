@@ -1,10 +1,22 @@
 /*
   Gadget Malawi — Global CSS
-  Design system: tokens, reset, base layout, primitives.
-  Component-specific styles live in components.css.
+  ============================================================
+  Design system + layout + ALL filters + ALL responsive rules.
 
-  Theme switching:
-    document.documentElement.dataset.theme = 'light';
+  This file OWNS:
+    - Design tokens (colors, spacing, typography)
+    - Reset and app shell
+    - Header layout (row, filters, brand)
+    - Sidebar
+    - Typography primitives
+    - Buttons, cards, forms, badges
+    - Hero, search, chips, product grid, product detail
+    - Filter pills and dropdowns (desktop + mobile)
+    - ALL responsive media queries
+    - Keyframes and light-mode overrides
+
+  Load order: globals.css first, then components.css.
+  Do NOT redefine any class from this file in components.css.
 */
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
@@ -19,7 +31,6 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 
-  /* Layout */
   --gm-content-max: 1440px;
   --gm-sidebar-width: 252px;
   --gm-header-height: 72px;
@@ -30,7 +41,6 @@
   --gm-radius-pill: 999px;
   --gm-transition: 180ms ease;
 
-  /* Colors — dark */
   --gm-bg: #07100d;
   --gm-bg-elevated: #0b1712;
   --gm-surface: #10221a;
@@ -63,7 +73,6 @@
   --gm-grid-line: rgba(132, 190, 151, .06);
   --gm-theme-image: url('https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=1600&q=75');
 
-  /* Typography */
   --gm-display: 'Manrope', 'DM Sans', system-ui, sans-serif;
   --gm-body-size: .96rem;
   --gm-small-size: .82rem;
@@ -168,7 +177,7 @@ svg { flex: 0 0 auto; }
 }
 
 /* ============================================================
-   HEADER (base — layout is in components.css)
+   HEADER — layout, row, filters
    ============================================================ */
 
 .gm-header {
@@ -182,6 +191,13 @@ svg { flex: 0 0 auto; }
   backdrop-filter: blur(18px);
 }
 
+.gm-header-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
 .gm-header-left, .gm-header-right {
   display: flex;
   align-items: center;
@@ -189,6 +205,115 @@ svg { flex: 0 0 auto; }
 }
 
 .gm-header-actions { display: flex; align-items: center; gap: 8px; }
+
+.gm-header-brand { display: none; }
+.gm-header-search { flex: 1; max-width: 440px; }
+
+.gm-header-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--gm-border);
+}
+
+/* ---- Filter pills ---- */
+
+.gm-filter-trigger-wrap { position: relative; }
+
+.gm-filter-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--gm-border);
+  border-radius: var(--gm-radius-pill);
+  background: var(--gm-surface-raised);
+  color: var(--gm-text-muted);
+  font-size: var(--gm-small-size);
+  font-weight: 700;
+  transition:
+    border-color var(--gm-transition),
+    background var(--gm-transition),
+    color var(--gm-transition);
+}
+.gm-filter-trigger:hover {
+  border-color: var(--gm-brand);
+  color: var(--gm-text);
+}
+.gm-filter-trigger.is-active {
+  border-color: var(--gm-brand);
+  background: var(--gm-brand-soft);
+  color: var(--gm-brand);
+}
+.gm-filter-trigger svg { font-size: 0.7em; opacity: 0.7; }
+
+.gm-filter-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--gm-radius-pill);
+  background: transparent;
+  color: var(--gm-text-muted);
+  font-size: var(--gm-small-size);
+  font-weight: 700;
+  cursor: pointer;
+}
+.gm-filter-clear:hover {
+  color: var(--gm-danger);
+  background: color-mix(in srgb, var(--gm-danger) 8%, transparent);
+}
+
+/* ---- Dropdown (desktop, anchored to pill) ---- */
+
+.gm-filter-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 200;
+  min-width: 220px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 6px;
+  display: grid;
+  gap: 2px;
+  box-shadow: var(--gm-shadow);
+  animation: gm-drop-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.gm-filter-dropdown-price {
+  min-width: 260px;
+  padding: 14px;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.gm-filter-option {
+  padding: 9px 12px;
+  border: 0;
+  border-radius: var(--gm-radius-sm);
+  background: transparent;
+  color: var(--gm-text-muted);
+  font-size: var(--gm-small-size);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--gm-transition), color var(--gm-transition);
+}
+.gm-filter-option:hover {
+  background: var(--gm-surface-hover);
+  color: var(--gm-text);
+}
+.gm-filter-option.is-selected {
+  background: var(--gm-brand-soft);
+  color: var(--gm-brand);
+  font-weight: 800;
+}
 
 /* ============================================================
    BRAND
@@ -266,7 +391,6 @@ svg { flex: 0 0 auto; }
   color: var(--gm-text);
   background: var(--gm-brand-soft);
 }
-
 .gm-nav-link.is-sell { color: var(--gm-accent); background: var(--gm-accent-soft); }
 .gm-nav-link.is-sell:hover { background: var(--gm-accent); color: white; }
 
@@ -276,7 +400,6 @@ svg { flex: 0 0 auto; }
   color: var(--gm-text-subtle);
   font-size: var(--gm-xs-size);
 }
-
 .gm-sidebar-cta { margin-top: 18px; }
 
 /* ============================================================
@@ -290,7 +413,6 @@ svg { flex: 0 0 auto; }
   letter-spacing: .15em;
   text-transform: uppercase;
 }
-
 .gm-title, .gm-display {
   margin: 0;
   color: var(--gm-text);
@@ -300,14 +422,12 @@ svg { flex: 0 0 auto; }
 }
 .gm-display { font-size: clamp(2.6rem, 6vw, 6rem); line-height: .97; }
 .gm-title { font-size: clamp(1.7rem, 3vw, 3rem); line-height: 1.04; }
-
 .gm-section-title {
   margin: 0;
   font-family: var(--gm-display);
   font-size: clamp(1.25rem, 2vw, 1.8rem);
   letter-spacing: -.04em;
 }
-
 .gm-muted { color: var(--gm-text-muted); }
 .gm-subtle { color: var(--gm-text-subtle); }
 .gm-small { font-size: var(--gm-small-size); }
@@ -346,20 +466,15 @@ svg { flex: 0 0 auto; }
     box-shadow var(--gm-transition);
 }
 .gm-btn:hover { transform: translateY(-1px); }
-.gm-btn:focus-visible {
-  outline: none;
-  box-shadow: var(--gm-focus);
-}
+.gm-btn:focus-visible { outline: none; box-shadow: var(--gm-focus); }
 
 .gm-btn-primary { background: var(--gm-brand); color: var(--gm-on-brand); }
 .gm-btn-primary:hover {
   background: var(--gm-brand-hover);
   box-shadow: 0 8px 20px color-mix(in srgb, var(--gm-brand) 26%, transparent);
 }
-
 .gm-btn-accent { background: var(--gm-accent); color: #fff; }
 .gm-btn-accent:hover { background: var(--gm-accent-hover); }
-
 .gm-btn-secondary {
   border-color: var(--gm-border-strong);
   background: transparent;
@@ -369,10 +484,8 @@ svg { flex: 0 0 auto; }
   border-color: var(--gm-brand);
   background: var(--gm-brand-soft);
 }
-
 .gm-btn-ghost { background: transparent; color: var(--gm-text-muted); }
 .gm-btn-ghost:hover { background: var(--gm-surface-hover); color: var(--gm-text); }
-
 .gm-btn-sm { min-height: 36px; padding-inline: 12px; }
 .gm-btn-block { width: 100%; }
 
@@ -410,7 +523,6 @@ svg { flex: 0 0 auto; }
   background: var(--gm-surface);
   box-shadow: var(--gm-shadow-soft);
 }
-
 .gm-card-pad { padding: clamp(16px, 2.2vw, 28px); }
 
 .gm-grid { display: grid; gap: 18px; }
@@ -450,7 +562,6 @@ svg { flex: 0 0 auto; }
     var(--gm-theme-image) center / cover no-repeat,
     linear-gradient(120deg, var(--gm-hero-start), var(--gm-hero-end));
 }
-
 .gm-market-hero::after {
   content: '';
   position: absolute;
@@ -459,7 +570,6 @@ svg { flex: 0 0 auto; }
   background: radial-gradient(circle at 78% 25%,
     color-mix(in srgb, var(--gm-brand) 22%, transparent), transparent 22rem);
 }
-
 .gm-market-hero-content { position: relative; z-index: 1; max-width: 640px; }
 .gm-market-hero h1 { margin: 10px 0 18px; }
 .gm-market-hero p {
@@ -503,7 +613,6 @@ svg { flex: 0 0 auto; }
   color: var(--gm-text);
 }
 .gm-search input::placeholder { color: var(--gm-text-subtle); }
-
 .gm-search-lg { min-height: 62px; border-radius: var(--gm-radius-md); }
 .gm-search-lg input { font-size: 1.02rem; }
 
@@ -512,7 +621,6 @@ svg { flex: 0 0 auto; }
    ============================================================ */
 
 .gm-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-
 .gm-chip, .gm-badge {
   display: inline-flex;
   align-items: center;
@@ -526,13 +634,11 @@ svg { flex: 0 0 auto; }
   font-size: var(--gm-xs-size);
   font-weight: 700;
 }
-
 .gm-chip:hover, .gm-chip.is-active {
   border-color: var(--gm-brand);
   background: var(--gm-brand-soft);
   color: var(--gm-brand);
 }
-
 .gm-badge-verified {
   border-color: color-mix(in srgb, var(--gm-info) 45%, var(--gm-border));
   background: color-mix(in srgb, var(--gm-info) 12%, transparent);
@@ -563,15 +669,12 @@ svg { flex: 0 0 auto; }
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
 }
-
 .gm-product-card {
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 .gm-product-card:hover { border-color: var(--gm-brand); }
-
-/* Key fix: <a> is inline by default — aspect-ratio needs block */
 .gm-product-media {
   display: block;
   position: relative;
@@ -579,7 +682,6 @@ svg { flex: 0 0 auto; }
   overflow: hidden;
   background: var(--gm-surface-raised);
 }
-
 .gm-product-media img {
   width: 100%;
   height: 100%;
@@ -587,14 +689,12 @@ svg { flex: 0 0 auto; }
   transition: transform 300ms ease;
 }
 .gm-product-card:hover .gm-product-media img { transform: scale(1.035); }
-
 .gm-product-media .gm-badge {
   position: absolute;
   top: 10px;
   left: 10px;
   z-index: 1;
 }
-
 .gm-product-media-fallback {
   display: grid;
   place-items: center;
@@ -604,7 +704,6 @@ svg { flex: 0 0 auto; }
   font-size: 1.8rem;
   background: var(--gm-surface-raised);
 }
-
 .gm-product-info {
   display: flex;
   flex-direction: column;
@@ -612,7 +711,6 @@ svg { flex: 0 0 auto; }
   padding: 12px;
   flex: 1;
 }
-
 .gm-product-title {
   margin: 0;
   overflow: hidden;
@@ -631,7 +729,6 @@ svg { flex: 0 0 auto; }
 .gm-product-title a { color: inherit; }
 .gm-product-title a:hover { color: var(--gm-brand); }
 
-/* Price — bright, always visible */
 .gm-card-price {
   display: flex;
   align-items: baseline;
@@ -661,7 +758,6 @@ svg { flex: 0 0 auto; }
   font-size: var(--gm-xs-size);
   margin-top: auto;
 }
-
 .gm-product-location {
   display: flex;
   align-items: center;
@@ -682,9 +778,7 @@ svg { flex: 0 0 auto; }
   gap: clamp(24px, 5vw, 72px);
   align-items: start;
 }
-
 .gm-gallery { display: grid; gap: 10px; }
-
 .gm-gallery-main {
   aspect-ratio: 4 / 3;
   overflow: hidden;
@@ -693,7 +787,6 @@ svg { flex: 0 0 auto; }
   background: var(--gm-surface-raised);
 }
 .gm-gallery-main img { width: 100%; height: 100%; object-fit: cover; }
-
 .gm-gallery-thumbs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -738,7 +831,7 @@ svg { flex: 0 0 auto; }
 .gm-sticky-buy .gm-btn { flex: 1; }
 
 /* ============================================================
-   STATS (dashboard)
+   STATS
    ============================================================ */
 
 .gm-stat-grid {
@@ -762,11 +855,7 @@ svg { flex: 0 0 auto; }
    ============================================================ */
 
 .gm-table-wrap { overflow-x: auto; }
-.gm-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 650px;
-}
+.gm-table { width: 100%; border-collapse: collapse; min-width: 650px; }
 .gm-table th, .gm-table td {
   padding: 13px 12px;
   border-bottom: 1px solid var(--gm-border);
@@ -798,7 +887,6 @@ svg { flex: 0 0 auto; }
   font-size: var(--gm-small-size);
   font-weight: 700;
 }
-
 .gm-input, .gm-select, .gm-textarea {
   width: 100%;
   min-height: 44px;
@@ -818,7 +906,7 @@ svg { flex: 0 0 auto; }
 }
 
 /* ============================================================
-   UPLOAD ZONE
+   UPLOAD
    ============================================================ */
 
 .gm-upload-zone {
@@ -1001,9 +1089,6 @@ svg { flex: 0 0 auto; }
   background-size: 200% 100%;
   animation: gm-shimmer 1.4s infinite linear;
 }
-@keyframes gm-shimmer {
-  to { background-position: -200% 0; }
-}
 
 /* ============================================================
    MOBILE NAV
@@ -1037,7 +1122,7 @@ svg { flex: 0 0 auto; }
 }
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE — 1180px
    ============================================================ */
 
 @media (max-width: 1180px) {
@@ -1045,45 +1130,180 @@ svg { flex: 0 0 auto; }
   .gm-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+/* ============================================================
+   RESPONSIVE — 980px (hide sidebar)
+   ============================================================ */
+
 @media (max-width: 980px) {
   :root { --gm-sidebar-width: 0px; }
   .gm-sidebar { display: none; }
   .gm-main { margin-left: 0; }
   .gm-header { padding-inline: 18px; }
+  .gm-header-brand { display: inline-flex; }
   .gm-product-detail { grid-template-columns: 1fr; }
   .gm-chat-layout { grid-template-columns: 250px minmax(0, 1fr); }
 }
 
-@media (max-width: 700px) {
-  .gm-container { width: min(calc(100% - 28px), var(--gm-content-max)); }
-  .gm-content { padding: 18px 14px 88px; }
-  .gm-header { min-height: 62px; }
+/* ============================================================
+   RESPONSIVE — 960px (mobile layout)
+   ============================================================ */
 
-  .gm-market-hero {
-    min-height: 460px;
-    padding: 24px 20px;
-    background-position: 62% center;
+@media (max-width: 960px) {
+  /* ---- Shell ---- */
+  .gm-container { width: min(calc(100% - 24px), var(--gm-content-max)); }
+  .gm-content { padding: 16px 12px 104px; }
+
+  /* ---- Header ----
+     Remove backdrop-filter on mobile: it creates a containing block
+     for absolutely-positioned children and is costly on old GPUs. */
+  .gm-header {
+    min-height: 58px;
+    padding: 10px 12px;
+    background: var(--gm-bg-elevated);
+    backdrop-filter: none;
   }
-  .gm-market-hero p { font-size: .96rem; }
+  .gm-header-main { gap: 8px; }
+  .gm-header .gm-brand {
+    gap: 8px;
+    font-size: 0.94rem;
+    letter-spacing: -.03em;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+  .gm-header .gm-brand span {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .gm-header .gm-brand img { flex-shrink: 0; }
+  .gm-header-right { gap: 6px; flex-shrink: 0; }
+  .gm-header .gm-header-right button[aria-label="Notifications"] { display: none; }
+  .gm-header .gm-btn-primary {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    min-width: 36px;
+    padding: 0;
+    border-radius: 50%;
+    justify-content: center;
+  }
+  .gm-header .gm-btn-primary span { display: none; }
+  .gm-header .gm-icon-btn { width: 34px; height: 34px; }
+  .gm-header-search { display: none; }
 
+  /* ---- Filter row ----
+     Pills wrap. The row itself is the anchor for the dropdown,
+     so the dropdown opens full-width below all pills. */
+  .gm-header-filters {
+    position: relative;   /* new containing block */
+    z-index: 100;
+    margin-top: 8px;
+    padding-top: 10px;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .gm-filter-trigger,
+  .gm-filter-clear {
+    min-height: 32px;
+    padding-inline: 12px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+  .gm-filter-trigger-wrap { position: static; }  /* release from pill anchor */
+
+  .gm-filter-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 6px;
+    min-width: 0;
+    max-width: none;
+    max-height: 60vh;
+    border-radius: 14px;
+    padding: 8px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  }
+  .gm-filter-dropdown-price {
+    min-width: 0;
+    padding: 14px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .gm-filter-option {
+    padding: 11px 13px;
+    font-size: 0.88rem;
+    border-radius: 8px;
+  }
+
+  /* ---- Hero ---- */
+  .gm-market-hero {
+    min-height: 380px;
+    padding: 24px 18px;
+    background-position: 62% center;
+    border-radius: var(--gm-radius-md);
+  }
+  .gm-market-hero h1 { font-size: clamp(1.9rem, 8vw, 2.6rem); }
+  .gm-market-hero p { font-size: .94rem; }
+  .gm-hero-actions { margin-top: 20px; }
+  .gm-hero-actions .gm-btn { flex: 1; min-width: 140px; }
+
+  /* ---- Product grid ---- */
+  .gm-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .gm-product-info { padding: 10px; gap: 7px; }
+  .gm-product-title { font-size: 0.84rem; min-height: 2.4em; line-height: 1.2; }
+  .gm-card-price { font-size: 0.94rem; }
+  .gm-card-price-currency { font-size: 0.66em; }
+  .gm-product-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: 0.68rem;
+  }
+  .gm-product-meta .gm-badge {
+    font-size: 0.62rem;
+    min-height: 20px;
+    padding-inline: 6px;
+    gap: 4px;
+  }
+  .gm-product-location { font-size: 0.68rem; }
+  .gm-product-card .gm-btn-sm {
+    min-height: 34px;
+    font-size: 0.74rem;
+    padding-inline: 8px;
+  }
+
+  /* ---- Product detail ---- */
+  .gm-product-detail { grid-template-columns: 1fr; gap: 20px; }
+  .gm-gallery-main { aspect-ratio: 4 / 3; }
+  .gm-gallery-thumbs { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .gm-sticky-buy { bottom: 82px; padding: 8px; }
+  .gm-sticky-buy .gm-btn {
+    font-size: 0.78rem;
+    padding-inline: 12px;
+    min-height: 40px;
+  }
+
+  /* ---- Forms ---- */
   .gm-grid-2, .gm-grid-3, .gm-grid-4, .gm-form-grid {
     grid-template-columns: 1fr;
   }
   .gm-field-full { grid-column: auto; }
 
-  .gm-product-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-  .gm-product-info { padding: 10px; gap: 6px; }
-  .gm-product-title { font-size: 0.82rem; min-height: 2.4em; }
-  .gm-card-price { font-size: 0.92rem; }
-  .gm-product-meta { display: grid; gap: 3px; font-size: 0.66rem; }
+  /* ---- Stats ---- */
+  .gm-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .gm-stat-value { font-size: 1.4rem; }
 
-  .gm-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .gm-chat-layout { grid-template-columns: 1fr; min-height: 560px; }
+  /* ---- Chat ---- */
+  .gm-chat-layout { grid-template-columns: 1fr; min-height: 520px; }
   .gm-chat-list { display: none; }
 
+  /* ---- Mobile nav ---- */
   .gm-mobile-nav {
     position: fixed;
     inset: auto 0 0;
@@ -1092,39 +1312,78 @@ svg { flex: 0 0 auto; }
     align-items: end;
     justify-content: space-around;
     min-height: 64px;
-    padding: 7px 8px;
+    padding: 6px 6px max(8px, env(safe-area-inset-bottom));
     border-top: 1px solid var(--gm-border);
-    background: color-mix(in srgb, var(--gm-bg-elevated) 92%, transparent);
-    backdrop-filter: blur(18px);
+    background: color-mix(in srgb, var(--gm-bg-elevated) 96%, transparent);
+    backdrop-filter: blur(20px);
+  }
+  .gm-mobile-nav a { font-size: 0.66rem; gap: 2px; padding: 4px 4px; min-width: 56px; }
+  .gm-mobile-nav a svg { font-size: 1.05rem; }
+  .gm-mobile-nav .gm-mobile-sell {
+    top: -14px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: -14px;
+    border-width: 3px;
+    font-size: 1.05rem;
   }
 
+  /* ---- Banners ---- */
   .gm-install-banner, .gm-offline-banner {
     align-items: flex-start;
     flex-direction: column;
-  }
-  .gm-sticky-buy { bottom: 76px; }
-
-  .gm-gallery-main { aspect-ratio: 4 / 3; }
-  .gm-gallery-thumbs { grid-template-columns: repeat(5, 1fr); gap: 6px; }
-}
-
-@media (max-width: 430px) {
-  .gm-product-grid { grid-template-columns: 1fr 1fr; }
-  .gm-product-title { font-size: .8rem; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    scroll-behavior: auto !important;
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
+    padding: 12px;
   }
 }
 
-@media (prefers-contrast: more) {
-  .gm-card, .gm-input, .gm-select, .gm-textarea,
-  .gm-btn-secondary, .gm-icon-btn {
-    border-width: 2px;
-  }
+/* ============================================================
+   RESPONSIVE — 400px (very narrow phones)
+   ============================================================ */
+
+@media (max-width: 400px) {
+  .gm-product-title { font-size: 0.8rem; }
+  .gm-card-price { font-size: 0.88rem; }
+  .gm-header .gm-brand img { width: 30px !important; height: 30px !important; }
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+
+@keyframes gm-drop-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes gm-shimmer {
+  to { background-position: -200% 0; }
+}
+
+/* ============================================================
+   HERO — LIGHT MODE overrides
+   ============================================================ */
+
+[data-theme='light'] .gm-market-hero {
+  background:
+    linear-gradient(90deg,
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(255, 255, 255, 0.78) 50%,
+      rgba(255, 255, 255, 0.35) 100%),
+    var(--gm-theme-image) center / cover no-repeat,
+    linear-gradient(120deg, var(--gm-hero-start), var(--gm-hero-end));
+}
+[data-theme='light'] .gm-market-hero h1 {
+  color: var(--gm-text);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+[data-theme='light'] .gm-market-hero p {
+  color: var(--gm-text-muted);
+  font-weight: 500;
+}
+[data-theme='light'] .gm-market-hero .gm-eyebrow {
+  color: var(--gm-brand);
+  font-weight: 800;
+}
+[data-theme='light'] .gm-market-hero::after {
+  background: radial-gradient(circle at 78% 25%,
+    rgba(47, 154, 101, 0.08), transparent 22rem);
 }

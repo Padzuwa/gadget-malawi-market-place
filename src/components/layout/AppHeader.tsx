@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMagnifyingGlass,
@@ -26,8 +26,8 @@ const conditionOptions: { value: ProductCondition; label: string }[] = [
 type DropdownId = 'category' | 'location' | 'condition' | 'price' | 'sort' | null;
 
 /**
- * Public wrapper — provides a Suspense boundary so useSearchParams()
- * doesn't break static prerendering of /_not-found and other pages.
+ * Wrapper with Suspense boundary so useSearchParams() doesn't break
+ * static prerendering of /_not-found and other pages.
  */
 export function AppHeader() {
   return (
@@ -37,10 +37,6 @@ export function AppHeader() {
   );
 }
 
-/**
- * Fallback shown during prerender and while the client hydrates.
- * Matches the real header height so nothing shifts on load.
- */
 function AppHeaderSkeleton() {
   return (
     <header className="gm-header">
@@ -59,11 +55,21 @@ function AppHeaderInner() {
   const [locations, setLocations] = useState<string[]>([]);
   const [open, setOpen] = useState<DropdownId>(null);
 
+  // Local state for price inputs. Committed to the URL only when the user
+  // taps Apply or presses Enter — otherwise typing closes the dropdown.
+  const [minValue, setMinValue] = useState('');
+  const [maxValue, setMaxValue] = useState('');
+
+  const filterRowRef = useRef<HTMLDivElement>(null);
+
   const isBrowse = pathname.startsWith('/browse');
 
+  // Fetch filter options once per browse mount.
   useEffect(() => {
     if (!isBrowse) return;
+    let cancelled = false;
     const supabase = createClient();
+
     Promise.all([
       supabase
         .from('categories')
@@ -76,14 +82,49 @@ function AppHeaderInner() {
         .eq('is_active', true)
         .order('sort_order'),
     ]).then(([c, l]) => {
+      if (cancelled) return;
       if (c.data) setCategories(c.data.map((r) => r.name as string));
       if (l.data) setLocations(l.data.map((r) => r.name as string));
     });
+
+    return () => {
+      cancelled = true;
+    };
   }, [isBrowse]);
 
+  // Close dropdowns on route change (pathname only).
+  // Do NOT watch searchParams — that would close the price dropdown
+  // the moment the user commits a value.
   useEffect(() => {
     setOpen(null);
-  }, [pathname, searchParams]);
+  }, [pathname]);
+
+  // Sync price inputs from URL whenever the price dropdown opens.
+  useEffect(() => {
+    if (open === 'price') {
+      setMinValue(searchParams.get('min') ?? '');
+      setMaxValue(searchParams.get('max') ?? '');
+    }
+  }, [open, searchParams]);
+
+  // Close dropdowns on click outside the filter row.
+  useEffect(() => {
+    if (!open) return;
+
+    function handlePointerDown(e: MouseEvent | TouchEvent) {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      if (filterRowRef.current?.contains(target)) return;
+      setOpen(null);
+    }
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('touchstart', handlePointerDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('touchstart', handlePointerDown);
+    };
+  }, [open]);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -101,11 +142,23 @@ function AppHeaderInner() {
   }
 
   function toggleCondition(value: ProductCondition) {
-    const current = searchParams.get('condition')?.split(',').filter(Boolean) ?? [];
+    const current =
+      searchParams.get('condition')?.split(',').filter(Boolean) ?? [];
     const next = current.includes(value)
       ? current.filter((c) => c !== value)
       : [...current, value];
     updateParam('condition', next.length ? next.join(',') : null);
+  }
+
+  function applyPrice() {
+    const params = new URLSearchParams(searchParams.toString());
+    if (minValue) params.set('min', minValue);
+    else params.delete('min');
+    if (maxValue) params.set('max', maxValue);
+    else params.delete('max');
+    const q = params.toString();
+    router.push(q ? `${pathname}?${q}` : pathname);
+    setOpen(null);
   }
 
   function clearAll() {
@@ -170,7 +223,8 @@ function AppHeaderInner() {
       </div>
 
       {isBrowse ? (
-        <div className="gm-header-filters">
+        <div className="gm-header-filters" ref={filterRowRef}>
+          {/* Category */}
           <div className="gm-filter-trigger-wrap">
             <button
               type="button"
@@ -203,6 +257,7 @@ function AppHeaderInner() {
             ) : null}
           </div>
 
+          {/* Location */}
           <div className="gm-filter-trigger-wrap">
             <button
               type="button"
@@ -235,6 +290,7 @@ function AppHeaderInner() {
             ) : null}
           </div>
 
+          {/* Condition */}
           <div className="gm-filter-trigger-wrap">
             <button
               type="button"
@@ -262,6 +318,7 @@ function AppHeaderInner() {
             ) : null}
           </div>
 
+          {/* Price — committed only on Apply / Enter */}
           <div className="gm-filter-trigger-wrap">
             <button
               type="button"
@@ -278,9 +335,16 @@ function AppHeaderInner() {
                   <input
                     type="number"
                     className="gm-input"
-                    defaultValue={currentMin}
-                    onBlur={(e) => updateParam('min', e.target.value || null)}
+                    value={minValue}
+                    onChange={(e) => setMinValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        applyPrice();
+                      }
+                    }}
                     placeholder="0"
+                    inputMode="numeric"
                   />
                 </div>
                 <div className="gm-field">
@@ -288,15 +352,31 @@ function AppHeaderInner() {
                   <input
                     type="number"
                     className="gm-input"
-                    defaultValue={currentMax}
-                    onBlur={(e) => updateParam('max', e.target.value || null)}
+                    value={maxValue}
+                    onChange={(e) => setMaxValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        applyPrice();
+                      }
+                    }}
                     placeholder="Any"
+                    inputMode="numeric"
                   />
                 </div>
+                <button
+                  type="button"
+                  className="gm-btn gm-btn-primary gm-btn-sm gm-btn-block"
+                  style={{ gridColumn: '1 / -1' }}
+                  onClick={applyPrice}
+                >
+                  Apply price
+                </button>
               </div>
             ) : null}
           </div>
 
+          {/* Sort */}
           <div className="gm-filter-trigger-wrap">
             <button
               type="button"

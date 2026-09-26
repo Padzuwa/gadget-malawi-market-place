@@ -8,6 +8,7 @@ import {
 import {
   faEnvelope,
   faLocationDot,
+  faPhone,
   faShieldHalved,
 } from '@fortawesome/free-solid-svg-icons';
 import { Logo } from '@/components/brand/Logo';
@@ -118,8 +119,13 @@ export function AppFooter() {
             <h3 className="gm-footer-heading">Get in touch</h3>
             <ul className="gm-footer-links">
               <li>
-                <a href="mailto:hello@gadgetmalawi.mw">
-                  <FontAwesomeIcon icon={faEnvelope} /> hello@gadgetmalawi.mw
+                <a href="mailto:peazydesun@gmail.com">
+                  <FontAwesomeIcon icon={faEnvelope} /> peazydesun@gmail.com
+                </a>
+              </li>
+              <li>
+                <a href="tel:+265123456789">
+                  <FontAwesomeIcon icon={faPhone} /> +265 992 404 606
                 </a>
               </li>
               <li>

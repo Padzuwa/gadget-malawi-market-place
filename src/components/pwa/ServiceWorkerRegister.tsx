@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 export function ServiceWorkerRegister() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (process.env.NODE_ENV !== 'production') return;
     if (!('serviceWorker' in navigator)) return;
 
     // Only register over HTTPS or localhost
