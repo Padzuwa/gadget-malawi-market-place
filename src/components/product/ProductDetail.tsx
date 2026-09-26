@@ -20,10 +20,10 @@ const conditionLabels: Record<Product['condition'], string> = {
   used: 'Used',
 };
 
-function formatPrice(amount: number) {
-  return new Intl.NumberFormat('en-MW', { maximumFractionDigits: 0 }).format(
-    amount
-  );
+function formatPrice(amount: number | string | null | undefined): string {
+  const n = Math.round(Number(amount));
+  if (!isFinite(n) || n < 0) return '0';
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 type ProductDetailProps = {

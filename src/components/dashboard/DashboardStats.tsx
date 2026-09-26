@@ -1,7 +1,7 @@
 import type { SellerStats } from '@/lib/data/seller';
 
 function formatNumber(n: number) {
-  return new Intl.NumberFormat('en-MW').format(n);
+  return String(Math.round(Number(n) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export function DashboardStats({ stats }: { stats: SellerStats }) {

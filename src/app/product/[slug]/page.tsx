@@ -33,11 +33,10 @@ export default async function ProductPage({ params }: PageProps) {
   }
 
   const similar = await getSimilarProducts(product, 4);
-  const galleryImages = product.imageUrl ? [product.imageUrl] : [];
 
   return (
     <>
-      <ProductDetail product={product} galleryImages={galleryImages} />
+      <ProductDetail product={product} galleryImages={product.images} />
       {similar.length > 0 ? (
         <SimilarProducts products={similar} currentProduct={product} />
       ) : null}

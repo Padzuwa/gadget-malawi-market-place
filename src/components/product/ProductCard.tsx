@@ -22,30 +22,21 @@ const conditionClasses: Record<Product['condition'], string> = {
   used: 'gm-badge-used',
 };
 
-function formatPrice(amount: number) {
-  return new Intl.NumberFormat('en-MW', { maximumFractionDigits: 0 }).format(
-    amount
-  );
+function formatPrice(amount: number | string | null | undefined): string {
+  const n = Math.round(Number(amount));
+  if (!isFinite(n) || n < 0) return '0';
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export function ProductCard({ product }: { product: Product }) {
   const [imageFailed, setImageFailed] = useState(false);
+  const href = `/product/${product.slug}`;
 
   return (
     <article className="gm-card gm-product-card">
-      <Link href={`/product/${product.slug}`} className="gm-product-media">
+      <Link href={href} className="gm-product-media" aria-label={product.title}>
         {imageFailed ? (
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'grid',
-              placeItems: 'center',
-              background: 'var(--gm-surface-raised)',
-              color: 'var(--gm-text-subtle)',
-              fontSize: '2rem',
-            }}
-          >
+          <div className="gm-product-media-fallback">
             <FontAwesomeIcon icon={faImage} />
           </div>
         ) : (
@@ -63,13 +54,13 @@ export function ProductCard({ product }: { product: Product }) {
 
       <div className="gm-product-info">
         <h3 className="gm-product-title">
-          <Link href={`/product/${product.slug}`}>{product.title}</Link>
+          <Link href={href}>{product.title}</Link>
         </h3>
 
-        <strong className="gm-price">
-          <small>{product.currency} </small>
-          {formatPrice(product.price)}
-        </strong>
+        <p className="gm-card-price">
+          <span className="gm-card-price-currency">MWK</span>
+          <span className="gm-card-price-value">{formatPrice(product.price)}</span>
+        </p>
 
         <div className="gm-product-meta">
           {product.seller.verified ? (
@@ -77,9 +68,7 @@ export function ProductCard({ product }: { product: Product }) {
               <FontAwesomeIcon icon={faCircleCheck} />
               Verified
             </span>
-          ) : (
-            <span className="gm-small gm-muted">{product.seller.name}</span>
-          )}
+          ) : null}
 
           <span className="gm-product-location">
             <FontAwesomeIcon icon={faLocationDot} />
@@ -87,20 +76,9 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
 
-        <div className="gm-product-actions">
-          <Link
-            href={`/product/${product.slug}`}
-            className="gm-btn gm-btn-primary gm-btn-sm"
-          >
-            View item
-          </Link>
-          <button
-            type="button"
-            className="gm-btn gm-btn-secondary gm-btn-sm"
-          >
-            Chat
-          </button>
-        </div>
+        <Link href={href} className="gm-btn gm-btn-secondary gm-btn-sm gm-btn-block">
+          More details
+        </Link>
       </div>
     </article>
   );

@@ -17,7 +17,10 @@ export type Product = {
   condition: ProductCondition;
   category: string;
   location: string;
+  /** Primary image URL (first in `images`). Kept for card grids. */
   imageUrl: string;
+  /** All image URLs. Empty if the listing has no photos. */
+  images: string[];
   seller: {
     name: string;
     verified: boolean;

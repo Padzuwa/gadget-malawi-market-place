@@ -1,39 +1,13 @@
 /*
-  Gadget Malawi — Layout shell additions
-  Small rules that support AppShell, AppHeader, AppSidebar, MobileNav.
-  Kept separate from globals.css so the design system file stays stable.
+  Gadget Malawi — Component-specific styles
+  Only rules that are unique to a specific component or layout.
+  Base primitives live in globals.css.
 */
 
-/* Header brand — hidden on desktop (sidebar already shows brand) */
-.gm-header-brand {
-  display: none;
-}
+/* ============================================================
+   1. SPLASH SCREEN
+   ============================================================ */
 
-/* Header search bar — flexible, capped width */
-.gm-header-search {
-  flex: 1;
-  max-width: 440px;
-}
-
-/* Sidebar "Sell a gadget" CTA spacing */
-.gm-sidebar-cta {
-  margin-top: 18px;
-}
-
-/* Below 980px the sidebar disappears — show brand in the header instead */
-@media (max-width: 980px) {
-  .gm-header-brand {
-    display: inline-flex;
-  }
-}
-
-/* Below 700px the header search is redundant — mobile nav has its own search */
-@media (max-width: 700px) {
-  .gm-header-search {
-    display: none;
-  }
-}
-/* Splash screen — shown on first paint, fades out on window load */
 .gm-splash {
   position: fixed;
   inset: 0;
@@ -73,201 +47,87 @@
 @keyframes gm-spin {
   to { transform: rotate(360deg); }
 }
-/* Filter panel inside the browse layout */
-.gm-filter-panel {
-  display: grid;
-  gap: 0;
-  align-self: start;
-}
 
-/* Toolbar "sort by" select — compact on desktop */
-@media (min-width: 701px) {
-  .gm-market-toolbar .gm-select {
-    width: auto;
-  }
-}
 /* ============================================================
-   Footer
+   2. HEADER — two-row layout
    ============================================================ */
 
-.gm-footer {
-  margin-top: 40px;
-  border-top: 1px solid var(--gm-border);
-  background: var(--gm-bg-elevated);
-}
-
-.gm-footer-inner {
-  width: min(calc(100% - 40px), var(--gm-content-max));
-  margin-inline: auto;
-  padding: clamp(36px, 6vw, 64px) 0 24px;
-}
-
-.gm-footer-grid {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1fr 1.3fr;
-  gap: clamp(24px, 4vw, 48px);
-  padding-bottom: 36px;
-  border-bottom: 1px solid var(--gm-border);
-}
-
-.gm-footer-brand .gm-brand {
-  font-size: 1.05rem;
-}
-
-.gm-footer-tagline {
-  margin: 16px 0 20px;
-  max-width: 320px;
-  color: var(--gm-text-muted);
-  font-size: var(--gm-small-size);
-  line-height: 1.6;
-}
-
-.gm-footer-social {
-  display: flex;
-  gap: 8px;
-}
-
-.gm-footer-col {
-  display: grid;
-  align-content: start;
-  gap: 14px;
-}
-
-.gm-footer-heading {
-  margin: 0;
-  color: var(--gm-text);
-  font-family: var(--gm-display);
-  font-size: var(--gm-small-size);
-  font-weight: 800;
-  letter-spacing: -.02em;
-  text-transform: uppercase;
-}
-
-.gm-footer-links {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 10px;
-  color: var(--gm-text-muted);
-  font-size: var(--gm-small-size);
-}
-
-.gm-footer-links a,
-.gm-footer-links span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: inherit;
-  transition: color var(--gm-transition);
-}
-
-.gm-footer-links a:hover {
-  color: var(--gm-brand);
-}
-
-.gm-footer-bottom {
+.gm-header-main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  padding-top: 20px;
-}
-
-.gm-footer-legal {
-  display: flex;
   gap: 18px;
-  font-size: var(--gm-small-size);
-  color: var(--gm-text-muted);
 }
 
-.gm-footer-legal a:hover {
-  color: var(--gm-brand);
-}
-
-@media (max-width: 1180px) {
-  .gm-footer-grid {
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
-  }
-  .gm-footer-col:last-child {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 980px) {
-  .gm-footer-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .gm-footer-col:last-child {
-    grid-column: auto;
-  }
-}
-
-@media (max-width: 700px) {
-  .gm-footer-inner {
-    width: min(calc(100% - 28px), var(--gm-content-max));
-    padding-bottom: 100px; /* clears the mobile bottom nav */
-  }
-  .gm-footer-grid {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-  .gm-footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-}
-/* ============================================================
-   Auth pages
-   ============================================================ */
-
-.gm-auth-wrap {
-  display: grid;
-  place-items: center;
-  padding: clamp(28px, 6vw, 64px) 0;
-}
-
-.gm-auth-card {
-  width: 100%;
-  max-width: 440px;
-}
-
-/* ============================================================
-   User menu (header)
-   ============================================================ */
-
-.gm-user-menu {
-  position: relative;
-}
-
-.gm-user-menu-panel {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  z-index: 80;
-  min-width: 240px;
-  overflow: hidden;
-  box-shadow: var(--gm-shadow);
-}
-
-.gm-user-menu-header {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--gm-border);
-}
-
-.gm-user-menu-links {
-  display: grid;
-  padding: 6px;
-}
-
-.gm-user-menu-links a,
-.gm-user-menu-links button {
+.gm-header-filters {
   display: flex;
   align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--gm-border);
+}
+
+.gm-header-brand { display: none; }
+.gm-header-search { flex: 1; max-width: 440px; }
+
+/* ============================================================
+   3. FILTER DROPDOWNS (in header)
+   ============================================================ */
+
+.gm-filter-trigger-wrap { position: relative; }
+
+.gm-filter-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--gm-border);
+  border-radius: var(--gm-radius-pill);
+  background: var(--gm-surface-raised);
+  color: var(--gm-text-muted);
+  font-size: var(--gm-small-size);
+  font-weight: 700;
+  transition:
+    border-color var(--gm-transition),
+    background var(--gm-transition),
+    color var(--gm-transition);
+}
+.gm-filter-trigger:hover {
+  border-color: var(--gm-brand);
+  color: var(--gm-text);
+}
+.gm-filter-trigger.is-active {
+  border-color: var(--gm-brand);
+  background: var(--gm-brand-soft);
+  color: var(--gm-brand);
+}
+.gm-filter-trigger svg { font-size: 0.7em; opacity: 0.7; }
+
+.gm-filter-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 80;
+  min-width: 220px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 6px;
+  display: grid;
+  gap: 2px;
+  box-shadow: var(--gm-shadow);
+}
+.gm-filter-dropdown-price {
+  min-width: 260px;
+  padding: 14px;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
-  padding: 10px 12px;
+}
+
+.gm-filter-option {
+  padding: 9px 12px;
   border: 0;
   border-radius: var(--gm-radius-sm);
   background: transparent;
@@ -278,88 +138,37 @@
   cursor: pointer;
   transition: background var(--gm-transition), color var(--gm-transition);
 }
-
-.gm-user-menu-links a:hover,
-.gm-user-menu-links button:hover {
+.gm-filter-option:hover {
   background: var(--gm-surface-hover);
   color: var(--gm-text);
 }
-/* ============================================================
-   Uploader
-   ============================================================ */
-
-.gm-upload-zone {
-  cursor: pointer;
-}
-
-.gm-upload-zone:focus-visible {
-  border-color: var(--gm-brand);
-  box-shadow: var(--gm-focus);
-  outline: none;
-}
-
-.gm-upload-zone-content {
-  text-align: center;
-}
-
-.gm-upload-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 10px;
-}
-
-.gm-upload-thumb {
-  position: relative;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border: 1px solid var(--gm-border);
-  border-radius: var(--gm-radius-sm);
-  background: var(--gm-surface-raised);
-}
-
-.gm-upload-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.gm-upload-thumb-remove {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--gm-danger) 92%, transparent);
-  color: white;
-  font-size: 0.75rem;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity var(--gm-transition);
-}
-
-.gm-upload-thumb:hover .gm-upload-thumb-remove,
-.gm-upload-thumb:focus-within .gm-upload-thumb-remove {
-  opacity: 1;
-}
-
-.gm-upload-thumb-badge {
-  position: absolute;
-  bottom: 6px;
-  left: 6px;
-  padding: 2px 8px;
-  border-radius: var(--gm-radius-pill);
-  background: var(--gm-brand);
-  color: var(--gm-on-brand);
-  font-size: var(--gm-xs-size);
+.gm-filter-option.is-selected {
+  background: var(--gm-brand-soft);
+  color: var(--gm-brand);
   font-weight: 800;
 }
+
+.gm-filter-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--gm-radius-pill);
+  background: transparent;
+  color: var(--gm-text-muted);
+  font-size: var(--gm-small-size);
+  font-weight: 700;
+  cursor: pointer;
+}
+.gm-filter-clear:hover {
+  color: var(--gm-danger);
+  background: color-mix(in srgb, var(--gm-danger) 8%, transparent);
+}
+
 /* ============================================================
-   Dashboard — listing rows
+   4. DASHBOARD LISTING ROWS
    ============================================================ */
 
 .gm-listing-row {
@@ -373,10 +182,7 @@
   background: var(--gm-surface);
   transition: border-color var(--gm-transition);
 }
-
-.gm-listing-row:hover {
-  border-color: var(--gm-border-strong);
-}
+.gm-listing-row:hover { border-color: var(--gm-border-strong); }
 
 .gm-listing-thumb {
   position: relative;
@@ -386,13 +192,7 @@
   border-radius: var(--gm-radius-sm);
   background: var(--gm-surface-raised);
 }
-
-.gm-listing-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
+.gm-listing-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .gm-listing-thumb-fallback {
   display: grid;
   place-items: center;
@@ -402,12 +202,7 @@
   font-size: 1.4rem;
 }
 
-.gm-listing-info {
-  display: grid;
-  gap: 6px;
-  min-width: 0;
-}
-
+.gm-listing-info { display: grid; gap: 6px; min-width: 0; }
 .gm-listing-title {
   color: var(--gm-text);
   font-family: var(--gm-display);
@@ -418,24 +213,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.gm-listing-title:hover {
-  color: var(--gm-brand);
-}
-
+.gm-listing-title:hover { color: var(--gm-brand); }
 .gm-listing-meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
 }
-
-.gm-listing-stats {
-  display: flex;
-  gap: 14px;
-  color: var(--gm-text-subtle);
-}
-
+.gm-listing-stats { display: flex; gap: 14px; color: var(--gm-text-subtle); }
 .gm-listing-actions {
   position: relative;
   display: flex;
@@ -454,7 +239,6 @@
   gap: 2px;
   box-shadow: var(--gm-shadow);
 }
-
 .gm-listing-menu > button {
   display: flex;
   align-items: center;
@@ -470,44 +254,211 @@
   cursor: pointer;
   transition: background var(--gm-transition), color var(--gm-transition);
 }
-
 .gm-listing-menu > button:hover {
   background: var(--gm-surface-hover);
   color: var(--gm-text);
 }
-
-.gm-listing-menu > button.is-danger {
-  color: var(--gm-danger);
-}
-
+.gm-listing-menu > button.is-danger { color: var(--gm-danger); }
 .gm-listing-menu > button.is-danger:hover {
   background: color-mix(in srgb, var(--gm-danger) 12%, transparent);
 }
-
 .gm-listing-menu-divider {
   height: 1px;
   margin: 4px 0;
   background: var(--gm-border);
 }
-
 .gm-listing-menu-confirm {
   padding: 10px 11px;
   border-radius: var(--gm-radius-sm);
   background: color-mix(in srgb, var(--gm-danger) 8%, transparent);
 }
 
+/* ============================================================
+   5. FOOTER
+   ============================================================ */
+
+.gm-footer {
+  margin-top: 40px;
+  border-top: 1px solid var(--gm-border);
+  background: var(--gm-bg-elevated);
+}
+.gm-footer-inner {
+  width: min(calc(100% - 40px), var(--gm-content-max));
+  margin-inline: auto;
+  padding: clamp(36px, 6vw, 64px) 0 24px;
+}
+.gm-footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1.3fr;
+  gap: clamp(24px, 4vw, 48px);
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--gm-border);
+}
+.gm-footer-brand .gm-brand { font-size: 1.05rem; }
+.gm-footer-tagline {
+  margin: 16px 0 20px;
+  max-width: 320px;
+  color: var(--gm-text-muted);
+  font-size: var(--gm-small-size);
+  line-height: 1.6;
+}
+.gm-footer-social { display: flex; gap: 8px; }
+.gm-footer-col { display: grid; align-content: start; gap: 14px; }
+.gm-footer-heading {
+  margin: 0;
+  color: var(--gm-text);
+  font-family: var(--gm-display);
+  font-size: var(--gm-small-size);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+}
+.gm-footer-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  color: var(--gm-text-muted);
+  font-size: var(--gm-small-size);
+}
+.gm-footer-links a,
+.gm-footer-links span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  transition: color var(--gm-transition);
+}
+.gm-footer-links a:hover { color: var(--gm-brand); }
+.gm-footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 20px;
+}
+.gm-footer-legal {
+  display: flex;
+  gap: 18px;
+  font-size: var(--gm-small-size);
+  color: var(--gm-text-muted);
+}
+.gm-footer-legal a:hover { color: var(--gm-brand); }
+
+/* ============================================================
+   6. AUTH PAGES
+   ============================================================ */
+
+.gm-auth-wrap {
+  display: grid;
+  place-items: center;
+  padding: clamp(28px, 6vw, 64px) 0;
+}
+.gm-auth-card { width: 100%; max-width: 440px; }
+
+/* ============================================================
+   7. USER MENU (header)
+   ============================================================ */
+
+.gm-user-menu { position: relative; }
+.gm-user-menu-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 80;
+  min-width: 240px;
+  overflow: hidden;
+  box-shadow: var(--gm-shadow);
+}
+.gm-user-menu-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gm-border);
+}
+.gm-user-menu-links { display: grid; padding: 6px; }
+.gm-user-menu-links a,
+.gm-user-menu-links button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: var(--gm-radius-sm);
+  background: transparent;
+  color: var(--gm-text-muted);
+  font-size: var(--gm-small-size);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--gm-transition), color var(--gm-transition);
+}
+.gm-user-menu-links a:hover,
+.gm-user-menu-links button:hover {
+  background: var(--gm-surface-hover);
+  color: var(--gm-text);
+}
+
+/* ============================================================
+   8. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1180px) {
+  .gm-footer-grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; }
+  .gm-footer-col:last-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 980px) {
+  .gm-header-brand { display: inline-flex; }
+  .gm-footer-grid { grid-template-columns: 1fr 1fr; }
+  .gm-footer-col:last-child { grid-column: auto; }
+}
+
 @media (max-width: 700px) {
+  .gm-header-main { gap: 10px; }
+  .gm-header-search { display: none; }
+
+  .gm-header-filters {
+    margin-top: 10px;
+    padding-top: 10px;
+    gap: 6px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .gm-header-filters::-webkit-scrollbar { display: none; }
+
+  .gm-filter-trigger,
+  .gm-filter-clear {
+    min-height: 32px;
+    padding-inline: 12px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+  .gm-filter-dropdown {
+    min-width: 200px;
+    max-width: calc(100vw - 28px);
+  }
+
   .gm-listing-row {
     grid-template-columns: 68px minmax(0, 1fr);
     gap: 12px;
   }
-
   .gm-listing-actions {
     grid-column: 1 / -1;
     justify-content: flex-end;
   }
+  .gm-listing-actions .gm-btn { flex: 1; }
 
-  .gm-listing-actions .gm-btn {
-    flex: 1;
+  .gm-footer-inner {
+    width: min(calc(100% - 28px), var(--gm-content-max));
+    padding-bottom: 100px;
+  }
+  .gm-footer-grid { grid-template-columns: 1fr; gap: 28px; }
+  .gm-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 }

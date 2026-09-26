@@ -2,10 +2,6 @@ import { createClient } from '@/lib/supabase/server';
 import type { Product, ProductCondition } from '@/lib/types';
 import type { BrowseFilters } from '@/lib/filters';
 
-/**
- * Raw shape returned by Supabase when we join categories, locations,
- * and the seller profile onto the products row.
- */
 type ProductRow = {
   id: string;
   slug: string;
@@ -15,6 +11,7 @@ type ProductRow = {
   currency: string;
   condition: ProductCondition;
   primary_image_url: string | null;
+  image_urls: string[] | null;
   created_at: string;
   categories: { name: string } | null;
   locations: { name: string } | null;
@@ -25,6 +22,11 @@ type ProductRow = {
   } | null;
 };
 
+/**
+ * The `!inner` on categories and locations turns those joins into filters.
+ * Without it, .eq('categories.name', ...) would only filter the joined rows,
+ * not the parent products — which is why filters silently did nothing before.
+ */
 const SELECT_COLUMNS = `
   id,
   slug,
@@ -34,13 +36,18 @@ const SELECT_COLUMNS = `
   currency,
   condition,
   primary_image_url,
+  image_urls,
   created_at,
-  categories:categories(name),
-  locations:locations(name),
+  categories!inner(name),
+  locations!inner(name),
   profiles:profiles(display_name, shop_name, shop_verified)
 `;
 
 function mapRow(row: ProductRow): Product {
+  const images = Array.isArray(row.image_urls) ? row.image_urls : [];
+  const fallback = row.primary_image_url ?? '';
+  const finalImages = images.length > 0 ? images : fallback ? [fallback] : [];
+
   return {
     id: row.id,
     slug: row.slug,
@@ -51,7 +58,8 @@ function mapRow(row: ProductRow): Product {
     condition: row.condition,
     category: row.categories?.name ?? 'Uncategorised',
     location: row.locations?.name ?? 'Malawi',
-    imageUrl: row.primary_image_url ?? '',
+    imageUrl: finalImages[0] ?? '',
+    images: finalImages,
     seller: {
       name: row.profiles?.shop_name || row.profiles?.display_name || 'Seller',
       verified: Boolean(row.profiles?.shop_verified),
@@ -59,7 +67,6 @@ function mapRow(row: ProductRow): Product {
   };
 }
 
-/** Fetch a list of products with optional filters. */
 export async function getProducts(
   filters: BrowseFilters = {}
 ): Promise<Product[]> {
@@ -71,8 +78,6 @@ export async function getProducts(
     .eq('status', 'active');
 
   if (filters.category) {
-    // Filter through the joined categories table by name.
-    // (PostgREST supports filtering on embedded resources.)
     query = query.eq('categories.name', filters.category);
   }
 
@@ -119,7 +124,6 @@ export async function getProducts(
   return (data as unknown as ProductRow[]).map(mapRow);
 }
 
-/** Fetch a single product by slug. Returns null if not found. */
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   const supabase = await createClient();
 
@@ -138,14 +142,12 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   return mapRow(data as unknown as ProductRow);
 }
 
-/** Fetch similar products — same category, excluding one id. */
 export async function getSimilarProducts(
   product: Product,
   limit = 4
 ): Promise<Product[]> {
   const supabase = await createClient();
 
-  // Same category first
   const { data: sameCategory } = await supabase
     .from('products')
     .select(SELECT_COLUMNS)
@@ -161,13 +163,12 @@ export async function getSimilarProducts(
     return same.map(mapRow);
   }
 
-  // Fill the gap with recent items from other categories
   const { data: others } = await supabase
     .from('products')
     .select(SELECT_COLUMNS)
     .eq('status', 'active')
-    .neq('id', product.id)
     .neq('categories.name', product.category)
+    .neq('id', product.id)
     .order('created_at', { ascending: false })
     .limit(limit - same.length);
 
