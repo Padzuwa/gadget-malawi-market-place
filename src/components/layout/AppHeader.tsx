@@ -4,14 +4,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faMagnifyingGlass,
-  faBell,
-  faUser,
-  faPlus,
-} from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faBell, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ThemeToggle } from './ThemeToggle';
 import { Logo } from '@/components/brand/Logo';
+import { UserMenu } from '@/components/auth/UserMenu';
 
 export function AppHeader() {
   const router = useRouter();
@@ -55,9 +51,7 @@ export function AppHeader() {
           <FontAwesomeIcon icon={faBell} />
         </button>
 
-        <Link href="/profile" className="gm-icon-btn" aria-label="My account">
-          <FontAwesomeIcon icon={faUser} />
-        </Link>
+        <UserMenu />
       </div>
     </header>
   );

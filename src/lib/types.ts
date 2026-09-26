@@ -1,5 +1,12 @@
 export type ProductCondition = 'new' | 'like-new' | 'used';
 
+export type ProductStatus =
+  | 'draft'
+  | 'active'
+  | 'paused'
+  | 'sold'
+  | 'archived';
+
 export type Product = {
   id: string;
   slug: string;
