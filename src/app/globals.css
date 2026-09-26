@@ -1330,7 +1330,7 @@ svg { flex: 0 0 auto; }
 
   /* ---- Chat ---- */
   .gm-chat-layout { grid-template-columns: 1fr; min-height: 520px; }
-  .gm-chat-list { display: none; }
+  
 
   /* ---- Mobile nav ---- */
   .gm-mobile-nav {
@@ -1415,4 +1415,221 @@ svg { flex: 0 0 auto; }
 [data-theme='light'] .gm-market-hero::after {
   background: radial-gradient(circle at 78% 25%,
     rgba(47, 154, 101, 0.08), transparent 22rem);
+}
+/* ============================================================
+   PRODUCT DETAIL — hero price, trust strip, sticky bar
+   ============================================================ */
+
+.gm-product-detail-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gm-product-fav {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+}
+.gm-product-fav.is-favorite {
+  color: var(--gm-accent);
+  border-color: color-mix(in srgb, var(--gm-accent) 50%, var(--gm-border));
+  background: color-mix(in srgb, var(--gm-accent) 10%, transparent);
+}
+
+.gm-gallery-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--gm-text-subtle);
+  font-size: 4rem;
+}
+
+.gm-price-block {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.gm-price-hero {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--gm-brand);
+  font-family: var(--gm-display);
+  font-size: clamp(1.9rem, 3.5vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -.04em;
+  line-height: 1;
+}
+.gm-price-hero small {
+  color: var(--gm-text-muted);
+  font-size: 0.42em;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.gm-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--gm-warning);
+  font-size: 0.78rem;
+}
+.gm-rating span {
+  margin-left: 8px;
+}
+
+.gm-trust-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--gm-border);
+  border-radius: var(--gm-radius-md);
+  background: var(--gm-surface);
+}
+
+.gm-trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  color: var(--gm-text-muted);
+  font-size: var(--gm-xs-size);
+  font-weight: 600;
+}
+.gm-trust-item svg {
+  color: var(--gm-brand);
+  font-size: 1.1rem;
+}
+
+/* Sticky buy bar — split layout */
+.gm-sticky-buy {
+  position: sticky;
+  bottom: 14px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--gm-border-strong);
+  border-radius: var(--gm-radius-lg);
+  background: color-mix(in srgb, var(--gm-bg-elevated) 96%, transparent);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.18), var(--gm-shadow-soft);
+  backdrop-filter: blur(20px);
+}
+
+.gm-sticky-buy-info {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.gm-sticky-price {
+  color: var(--gm-brand);
+  font-family: var(--gm-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.gm-sticky-price small {
+  color: var(--gm-text-muted);
+  font-size: 0.72em;
+  font-weight: 700;
+  margin-right: 2px;
+  letter-spacing: 0;
+}
+
+.gm-sticky-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--gm-text-subtle);
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gm-sticky-hint svg {
+  color: var(--gm-brand);
+  font-size: 0.85em;
+}
+
+.gm-sticky-buy-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.gm-sticky-buy-actions .gm-btn {
+  white-space: nowrap;
+  min-height: 44px;
+  flex: 0 0 auto;
+}
+
+.gm-btn-buy {
+  padding-inline: 22px;
+  font-size: 0.88rem;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--gm-brand) 32%, transparent);
+}
+.gm-btn-buy:hover {
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--gm-brand) 42%, transparent);
+  transform: translateY(-1px);
+}
+
+/* Mobile: sticky bar stacks */
+@media (max-width: 700px) {
+  .gm-sticky-buy {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    bottom: 76px;
+    padding: 10px;
+    border-radius: var(--gm-radius-md);
+  }
+
+  .gm-sticky-buy-info {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .gm-sticky-price {
+    font-size: 1rem;
+  }
+
+  .gm-sticky-hint {
+    font-size: 0.6rem;
+  }
+
+  .gm-sticky-buy-actions {
+    width: 100%;
+  }
+  .gm-sticky-buy-actions .gm-btn {
+    flex: 1;
+    min-height: 42px;
+    padding-inline: 12px;
+    font-size: 0.8rem;
+  }
+
+  .gm-trust-strip {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+  .gm-trust-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+  }
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { startConversation } from '@/app/messages/actions';
+import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLocationDot,
@@ -11,9 +11,14 @@ import {
   faTag,
   faArrowLeft,
   faImage,
+  faHeart,
+  faShieldHalved,
+  faBolt,
+  faTruck,
+  faStar,
 } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
 import type { Product } from '@/lib/types';
+import { startConversation } from '@/app/messages/actions';
 
 const conditionLabels: Record<Product['condition'], string> = {
   new: 'New',
@@ -35,6 +40,14 @@ type ProductDetailProps = {
 export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
   const [activeImage, setActiveImage] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  function handleAddToCart() {
+    // Placeholder until cart is built in Step 19
+    setAddedToCart(true);
+    window.setTimeout(() => setAddedToCart(false), 1800);
+  }
 
   return (
     <div className="gm-stack" style={{ gap: 20 }}>
@@ -48,19 +61,11 @@ export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
       </Link>
 
       <div className="gm-product-detail">
+        {/* Gallery */}
         <div className="gm-gallery">
           <div className="gm-gallery-main">
             {imageFailed ? (
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'grid',
-                  placeItems: 'center',
-                  color: 'var(--gm-text-subtle)',
-                  fontSize: '4rem',
-                }}
-              >
+              <div className="gm-gallery-fallback">
                 <FontAwesomeIcon icon={faImage} />
               </div>
             ) : (
@@ -91,29 +96,57 @@ export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
           ) : null}
         </div>
 
+        {/* Info column */}
         <div className="gm-stack" style={{ gap: 16 }}>
-          <div className="gm-row" style={{ gap: 8, flexWrap: 'wrap' }}>
-            <span className="gm-badge gm-badge-new">
-              {conditionLabels[product.condition]}
-            </span>
-            <span className="gm-badge">{product.category}</span>
+          {/* Top row: badges + favorite */}
+          <div className="gm-product-detail-top">
+            <div className="gm-row" style={{ gap: 8, flexWrap: 'wrap' }}>
+              <span className="gm-badge gm-badge-new">
+                {conditionLabels[product.condition]}
+              </span>
+              <span className="gm-badge">{product.category}</span>
+            </div>
+
+            <button
+              type="button"
+              className={`gm-icon-btn gm-product-fav${
+                isFavorite ? ' is-favorite' : ''
+              }`}
+              onClick={() => setIsFavorite((v) => !v)}
+              aria-label={
+                isFavorite ? 'Remove from favorites' : 'Add to favorites'
+              }
+            >
+              <FontAwesomeIcon icon={faHeart} />
+            </button>
           </div>
 
+          {/* Title + subtitle */}
           <h1 className="gm-title" style={{ margin: 0 }}>
             {product.title}
           </h1>
 
-          <p className="gm-muted" style={{ margin: 0, fontSize: '1rem' }}>
-            {product.subtitle}
-          </p>
+          {product.subtitle ? (
+            <p className="gm-muted" style={{ margin: 0, fontSize: '1rem' }}>
+              {product.subtitle}
+            </p>
+          ) : null}
 
-          <strong
-            className="gm-price"
-            style={{ fontSize: 'clamp(1.8rem, 3vw, 2.4rem)' }}
-          >
-            <small>{product.currency} </small>
-            {formatPrice(product.price)}
-          </strong>
+          {/* Price + rating */}
+          <div className="gm-price-block">
+            <strong className="gm-price-hero">
+              <small>{product.currency}</small>
+              {formatPrice(product.price)}
+            </strong>
+            <span className="gm-rating" aria-label="Seller rating">
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <FontAwesomeIcon icon={faStar} />
+              <span className="gm-small gm-muted">4.8</span>
+            </span>
+          </div>
 
           {/* Seller card */}
           <div className="gm-card gm-card-pad gm-stack" style={{ gap: 12 }}>
@@ -137,19 +170,35 @@ export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
               </div>
             </div>
 
-        <form action={startConversation}>
-  <input type="hidden" name="productId" value={product.id} />
-  <button
-    type="submit"
-    className="gm-btn gm-btn-secondary gm-btn-block"
-  >
-    <FontAwesomeIcon icon={faComment} />
-    Chat with seller
-  </button>
-</form>
+            <form action={startConversation} style={{ display: 'block' }}>
+              <input type="hidden" name="productId" value={product.id} />
+              <button
+                type="submit"
+                className="gm-btn gm-btn-secondary gm-btn-block"
+              >
+                <FontAwesomeIcon icon={faComment} />
+                Chat with seller
+              </button>
+            </form>
           </div>
 
-          {/* Description — now correctly outside the seller card */}
+          {/* Trust strip */}
+          <div className="gm-trust-strip">
+            <div className="gm-trust-item">
+              <FontAwesomeIcon icon={faShieldHalved} />
+              <span>Secure payment</span>
+            </div>
+            <div className="gm-trust-item">
+              <FontAwesomeIcon icon={faBolt} />
+              <span>Fast reply</span>
+            </div>
+            <div className="gm-trust-item">
+              <FontAwesomeIcon icon={faTruck} />
+              <span>Delivery available</span>
+            </div>
+          </div>
+
+          {/* Description */}
           <div className="gm-stack" style={{ gap: 8 }}>
             <strong
               className="gm-section-title"
@@ -164,16 +213,35 @@ export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
             </p>
           </div>
 
-          {/* Sticky buy bar — now correctly outside the seller card */}
+          {/* Sticky buy bar */}
           <div className="gm-sticky-buy">
-            <button type="button" className="gm-btn gm-btn-accent">
-              <FontAwesomeIcon icon={faTag} />
-              Buy with Airtel Money
-            </button>
-            <button type="button" className="gm-btn gm-btn-primary">
-              <FontAwesomeIcon icon={faCartShopping} />
-              Add to cart
-            </button>
+            <div className="gm-sticky-buy-info">
+              <strong className="gm-sticky-price">
+                <small>{product.currency}</small>
+                {formatPrice(product.price)}
+              </strong>
+              <span className="gm-sticky-hint">
+                <FontAwesomeIcon icon={faShieldHalved} />
+                Secure checkout · Buyer protection
+              </span>
+            </div>
+
+            <div className="gm-sticky-buy-actions">
+              <button
+                type="button"
+                className="gm-btn gm-btn-secondary"
+                onClick={handleAddToCart}
+                aria-live="polite"
+              >
+                <FontAwesomeIcon icon={faCartShopping} />
+                <span>{addedToCart ? 'Added' : 'Add to cart'}</span>
+              </button>
+
+              <button type="button" className="gm-btn gm-btn-primary gm-btn-buy">
+                <FontAwesomeIcon icon={faTag} />
+                <span>Buy now</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

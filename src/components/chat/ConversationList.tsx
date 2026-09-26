@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { faImage, faCommentDots } from '@fortawesome/free-solid-svg-icons';
 import { usePathname } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
 import type { ConversationSummary } from '@/lib/data/chat';
 
 function relativeTime(iso: string): string {
@@ -28,19 +28,20 @@ export function ConversationList({
 }) {
   const pathname = usePathname();
 
-  if (conversations.length === 0) {
-    return (
-      <div className="gm-chat-empty">
-        <p className="gm-muted" style={{ margin: 0 }}>
-          No conversations yet.
-        </p>
-        <p className="gm-small gm-subtle" style={{ margin: 0 }}>
-          Message a seller from any product page to start.
-        </p>
-      </div>
-    );
-  }
-
+ if (conversations.length === 0) {
+  return (
+    <div className="gm-chat-empty">
+      <FontAwesomeIcon icon={faCommentDots} />
+      <strong>No conversations yet</strong>
+      <p className="gm-small gm-subtle" style={{ margin: 0 }}>
+        Message a seller from any product page to start.
+      </p>
+      <Link href="/browse" className="gm-btn gm-btn-primary gm-btn-sm">
+        Browse gadgets
+      </Link>
+    </div>
+  );
+}
   return (
     <div className="gm-chat-list">
       {conversations.map((c) => {

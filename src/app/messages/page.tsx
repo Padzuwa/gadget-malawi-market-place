@@ -35,20 +35,23 @@ export default async function MessagesPage() {
       </div>
 
       <div className="gm-card" style={{ overflow: 'hidden' }}>
-        <div className="gm-chat-layout" style={{ minHeight: 500 }}>
-          <ConversationList conversations={conversations} />
-          <div className="gm-chat-window gm-chat-window-empty">
-            <div className="gm-chat-empty-window">
-              <p className="gm-muted" style={{ margin: 0 }}>
-                Pick a conversation to start chatting
-              </p>
-              <p className="gm-small gm-subtle" style={{ margin: 0 }}>
-                Or message a seller from any product page.
-              </p>
-            </div>
+<div className="gm-chat-layout gm-chat-layout-list-only" style={{ minHeight: 500 }}>   
+           <ConversationList conversations={conversations} />
+         <div className="gm-chat-window gm-chat-window-empty">
+  <div className="gm-chat-empty-window">
+    <div>
+      <p className="gm-muted" style={{ margin: 0 }}>
+        Pick a conversation to start chatting
+      </p>
+      <p className="gm-small gm-subtle" style={{ margin: 0 }}>
+        Or message a seller from any product page.
+      </p>
+    </div>
+  </div>
+</div>
           </div>
         </div>
       </div>
-    </div>
+
   );
 }

@@ -52,8 +52,8 @@ export default async function ConversationPage({ params }: PageProps) {
       </div>
 
       <div className="gm-card" style={{ overflow: 'hidden' }}>
-        <div className="gm-chat-layout">
-          <ConversationList conversations={conversations} />
+<div className="gm-chat-layout gm-chat-layout-thread">
+              <ConversationList conversations={conversations} />
           <ChatWindow
             conversationId={conversation.id}
             currentUserId={conversation.currentUserId}
