@@ -1,5 +1,5 @@
 'use client';
-
+// This component renders a row in the seller's dashboard listing table. It displays the listing's thumbnail, title, price, status, category, location, and view count. It also provides actions to edit the listing, change its status (activate, pause, mark as sold, archive), and delete it. The component manages the state of the action menu and handles transitions for status updates and deletion.
 import { useEffect, useRef, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

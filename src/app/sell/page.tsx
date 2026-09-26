@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { SellForm } from '@/app/sell/SellForm';
+import { SellForm } from '@/components/sell/SellForm';
 // This page allows authenticated users to create a new product listing. It fetches the list of active categories and locations from the database and passes them to the SellForm component. If the user is not authenticated, they are redirected to the login page with a `next` parameter pointing back to this page.
 export const metadata: Metadata = {
   title: 'Sell a gadget',

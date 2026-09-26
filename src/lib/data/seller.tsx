@@ -98,4 +98,87 @@ export function computeStats(listings: SellerListing[]): SellerStats {
     soldListings: visible.filter((l) => l.status === 'sold').length,
     totalViews: visible.reduce((sum, l) => sum + (l.viewsCount || 0), 0),
   };
+  
+}
+export type EditableListing = {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  categoryId: string;
+  locationId: string;
+  condition: ProductCondition;
+  price: number;
+  specs: Record<string, string>;
+  images: { path: string; url: string }[];
+};
+
+type EditableRow = {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  category_id: string | null;
+  location_id: string | null;
+  condition: ProductCondition;
+  price: number;
+  specs: Record<string, string> | null;
+  image_urls: string[] | null;
+};
+
+/**
+ * Extract the storage path from a Supabase public URL.
+ * e.g. ".../product-images/user-id/photo.webp" -> "user-id/photo.webp"
+ * Returns '' if the URL isn't a product image.
+ */
+function pathFromPublicUrl(url: string): string {
+  const marker = '/storage/v1/object/public/product-images/';
+  const idx = url.indexOf(marker);
+  return idx === -1 ? '' : url.slice(idx + marker.length);
+}
+
+export async function getMyListingById(
+  id: string
+): Promise<EditableListing | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  const { data, error } = await supabase
+    .from('products')
+    .select(
+      'id, title, subtitle, description, category_id, location_id, condition, price, specs, image_urls'
+    )
+    .eq('id', id)
+    .eq('seller_id', user.id)
+    .maybeSingle();
+
+  if (error || !data) {
+    if (error) console.error('getMyListingById error:', error.message);
+    return null;
+  }
+
+  const row = data as EditableRow;
+
+  const imageUrls = Array.isArray(row.image_urls) ? row.image_urls : [];
+  const images = imageUrls.map((url) => ({
+    url,
+    path: pathFromPublicUrl(url),
+  }));
+
+  return {
+    id: row.id,
+    title: row.title,
+    subtitle: row.subtitle ?? '',
+    description: row.description ?? '',
+    categoryId: row.category_id ?? '',
+    locationId: row.location_id ?? '',
+    condition: row.condition,
+    price: Number(row.price),
+    specs: (row.specs as Record<string, string>) ?? {},
+    images,
+  };
 }

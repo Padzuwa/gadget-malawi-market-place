@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { createProduct } from '@/app/sell/actions';
+import { createProduct, updateProduct } from '@/app/sell/actions';
 import { ImageUploader } from '@/components/upload/ImageUploader';
 import { DynamicSpecFields } from './DynamicSpecFields';
 import type { UploadedImage } from '@/lib/supabase/storage';
@@ -12,36 +12,69 @@ const MIN_IMAGES = 2;
 type Category = { id: string; name: string };
 type Location = { id: string; name: string };
 
+export type SellFormInitialValues = {
+  title: string;
+  subtitle: string;
+  description: string;
+  categoryId: string;
+  locationId: string;
+  condition: 'new' | 'like-new' | 'used';
+  price: string;
+  specs: Record<string, string>;
+  images: UploadedImage[];
+};
+
 type Props = {
   categories: Category[];
   locations: Location[];
+  mode?: 'create' | 'edit';
+  listingId?: string;
+  initialValues?: SellFormInitialValues;
 };
 
-export function SellForm({ categories, locations }: Props) {
+export function SellForm({
+  categories,
+  locations,
+  mode = 'create',
+  listingId,
+  initialValues,
+}: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  const [title, setTitle] = useState('');
-  const [subtitle, setSubtitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  const [locationId, setLocationId] = useState('');
-  const [condition, setCondition] = useState<'new' | 'like-new' | 'used'>('used');
-  const [price, setPrice] = useState('');
-  const [specs, setSpecs] = useState<Record<string, string>>({});
-  const [images, setImages] = useState<UploadedImage[]>([]);
+  const [title, setTitle] = useState(initialValues?.title ?? '');
+  const [subtitle, setSubtitle] = useState(initialValues?.subtitle ?? '');
+  const [description, setDescription] = useState(
+    initialValues?.description ?? ''
+  );
+  const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? '');
+  const [locationId, setLocationId] = useState(initialValues?.locationId ?? '');
+  const [condition, setCondition] = useState<'new' | 'like-new' | 'used'>(
+    initialValues?.condition ?? 'used'
+  );
+  const [price, setPrice] = useState(initialValues?.price ?? '');
+  const [specs, setSpecs] = useState<Record<string, string>>(
+    initialValues?.specs ?? {}
+  );
+  const [images, setImages] = useState<UploadedImage[]>(
+    initialValues?.images ?? []
+  );
   const [error, setError] = useState<string | null>(null);
 
   const selectedCategory = categories.find((c) => c.id === categoryId);
   const hasEnoughImages = images.length >= MIN_IMAGES;
+  const isEdit = mode === 'edit';
 
   function updateSpec(key: string, value: string) {
     setSpecs((prev) => ({ ...prev, [key]: value }));
   }
 
   function handleCategoryChange(newId: string) {
+    if (newId === categoryId) return;
     setCategoryId(newId);
-    setSpecs({});
+    // Only clear specs when creating. When editing, keep whatever the
+    // seller already typed in case they toggle back to the same category.
+    if (!isEdit) setSpecs({});
   }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -56,7 +89,7 @@ export function SellForm({ categories, locations }: Props) {
     }
 
     startTransition(async () => {
-      const result = await createProduct({
+      const baseInput = {
         title,
         subtitle,
         description,
@@ -66,7 +99,11 @@ export function SellForm({ categories, locations }: Props) {
         price: Number(price),
         specs,
         imageUrls: images.map((img) => img.url),
-      });
+      };
+
+      const result = isEdit && listingId
+        ? await updateProduct({ ...baseInput, listingId })
+        : await createProduct(baseInput);
 
       if (result && 'error' in result) {
         setError(result.error);
@@ -264,10 +301,21 @@ export function SellForm({ categories, locations }: Props) {
           className="gm-btn gm-btn-primary"
           disabled={pending || !hasEnoughImages}
         >
-          {pending ? 'Publishing…' : 'Publish listing'}
+          {pending
+            ? isEdit
+              ? 'Saving…'
+              : 'Publishing…'
+            : isEdit
+            ? 'Save changes'
+            : 'Publish listing'}
         </button>
-        <button type="button" className="gm-btn gm-btn-ghost" disabled={pending}>
-          Save as draft
+        <button
+          type="button"
+          className="gm-btn gm-btn-ghost"
+          onClick={() => router.back()}
+          disabled={pending}
+        >
+          Cancel
         </button>
       </div>
 
@@ -275,7 +323,7 @@ export function SellForm({ categories, locations }: Props) {
         <p className="gm-xs gm-subtle" style={{ margin: 0 }}>
           Add {MIN_IMAGES - images.length} more{' '}
           {MIN_IMAGES - images.length === 1 ? 'photo' : 'photos'} to enable
-          publishing.
+          {isEdit ? ' saving.' : ' publishing.'}
         </p>
       ) : null}
     </form>
