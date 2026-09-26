@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="Gadget Malawi">
+  <title>Gadget Malawi</title>
+
+  <!-- Cream rounded-square background -->
+  <rect width="64" height="64" rx="14" fill="#f5f0e6"/>
+
+  <!-- Green pin silhouette -->
+  <path d="M 32 62 C 16 48 8 38 8 26 A 24 24 0 1 1 56 26 C 56 38 48 48 32 62 Z"
+        fill="#1a4d34"/>
+
+  <!-- White G letterform -->
+  <path d="M 45 19 A 15 15 0 1 0 45 37 L 45 32 L 36 32"
+        fill="none" stroke="#f5f0e6" stroke-width="5.5"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Shopping bag handle -->
+  <path d="M 27 27 L 27 24 Q 27 21 30 21 Q 33 21 33 24 L 33 27"
+        fill="none" stroke="#f5f0e6" stroke-width="2"/>
+
+  <!-- Shopping bag body -->
+  <path d="M 24 27 L 36 27 L 35 37 L 25 37 Z" fill="#f5f0e6"/>
+
+  <!-- Green M inside bag -->
+  <path d="M 26 35 L 26 29 L 30 32 L 34 29 L 34 35"
+        fill="none" stroke="#1a4d34" stroke-width="1.8"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Red location pin -->
+  <path d="M 32 46 C 27 46 24 49 24 52 C 24 55 27 58 32 61 C 37 58 40 55 40 52 C 40 49 37 46 32 46 Z"
+        fill="#d1302d"/>
+  <circle cx="32" cy="51" r="2.2" fill="#f5f0e6"/>
+</svg>

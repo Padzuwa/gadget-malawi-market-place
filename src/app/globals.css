@@ -1,13 +1,9 @@
 /*
   Gadget Malawi — Global CSS
-  Dark mode: First visual direction — premium African-tech marketplace
-  Light mode: Second visual direction — human, local, trustworthy marketplace
+  Dark mode: first visual direction — premium African-tech marketplace
+  Light mode: second visual direction — human, local, trustworthy marketplace
 
-  Usage:
-    <html data-theme="dark">  -> default dark marketplace
-    <html data-theme="light"> -> warm light marketplace
-
-  JavaScript theme toggle:
+  Theme switching:
     document.documentElement.dataset.theme = 'light';
 */
 
@@ -23,7 +19,6 @@
   --gm-content-max: 1440px;
   --gm-sidebar-width: 252px;
   --gm-header-height: 72px;
-  --gm-player-height: 0px;
   --gm-radius-xs: 6px;
   --gm-radius-sm: 10px;
   --gm-radius-md: 16px;
@@ -31,7 +26,7 @@
   --gm-radius-pill: 999px;
   --gm-transition: 180ms ease;
 
-  /* DARK — first concept direction */
+  /* DARK — default */
   --gm-bg: #07100d;
   --gm-bg-elevated: #0b1712;
   --gm-surface: #10221a;
@@ -62,7 +57,7 @@
   --gm-shadow-soft: 0 10px 32px rgba(0, 0, 0, .18);
   --gm-focus: 0 0 0 4px rgba(47, 154, 101, .2);
   --gm-grid-line: rgba(132, 190, 151, .06);
-  --gm-theme-image: url('/images/gadget-malawi-dark-hero.jpg');
+  --gm-theme-image: linear-gradient(120deg, #0b351f, #07100d);
 
   /* Typography */
   --gm-display: 'Manrope', 'DM Sans', system-ui, sans-serif;
@@ -75,7 +70,6 @@
 [data-theme='light'] {
   color-scheme: light;
 
-  /* LIGHT — second human/local concept direction */
   --gm-bg: #f5f7f2;
   --gm-bg-elevated: #ffffff;
   --gm-surface: #ffffff;
@@ -106,10 +100,9 @@
   --gm-shadow-soft: 0 10px 30px rgba(29, 63, 40, .08);
   --gm-focus: 0 0 0 4px rgba(33, 116, 74, .14);
   --gm-grid-line: rgba(26, 87, 50, .07);
-  --gm-theme-image: url('/images/gadget-malawi-light-hero.jpg');
+  --gm-theme-image: linear-gradient(120deg, #dfece1, #f8faf6);
 }
 
-/* Base reset */
 *, *::before, *::after { box-sizing: border-box; }
 html { min-width: 320px; background: var(--gm-bg); }
 body {
@@ -128,7 +121,6 @@ img { display: block; max-width: 100%; }
 svg { flex: 0 0 auto; }
 ::selection { background: var(--gm-brand); color: var(--gm-on-brand); }
 
-/* App shell */
 .gm-app {
   min-height: 100vh;
   background:
@@ -144,7 +136,6 @@ svg { flex: 0 0 auto; }
 .gm-main { min-height: 100vh; margin-left: var(--gm-sidebar-width); }
 .gm-content { padding: clamp(22px, 4vw, 58px); }
 
-/* Header */
 .gm-header {
   position: sticky;
   top: 0;
@@ -162,7 +153,6 @@ svg { flex: 0 0 auto; }
 .gm-header-left, .gm-header-right { display: flex; align-items: center; gap: 12px; }
 .gm-header-actions { display: flex; align-items: center; gap: 8px; }
 
-/* Brand */
 .gm-brand {
   display: inline-flex;
   align-items: center;
@@ -188,7 +178,6 @@ svg { flex: 0 0 auto; }
 }
 .gm-brand span { white-space: nowrap; }
 
-/* Sidebar */
 .gm-sidebar {
   position: fixed;
   inset: 0 auto 0 0;
@@ -231,7 +220,6 @@ svg { flex: 0 0 auto; }
 .gm-nav-badge { margin-left: auto; }
 .gm-sidebar-footer { margin-top: auto; padding: 12px; color: var(--gm-text-subtle); font-size: var(--gm-xs-size); }
 
-/* Typography */
 .gm-eyebrow {
   color: var(--gm-brand);
   font-size: var(--gm-xs-size);
@@ -256,7 +244,6 @@ svg { flex: 0 0 auto; }
 .gm-price { color: var(--gm-text); font-family: var(--gm-display); font-weight: 800; letter-spacing: -.03em; }
 .gm-price small { color: var(--gm-text-muted); font-family: inherit; font-size: .7em; font-weight: 600; }
 
-/* Buttons */
 .gm-btn {
   display: inline-flex;
   align-items: center;
@@ -297,7 +284,6 @@ svg { flex: 0 0 auto; }
 .gm-icon-btn:hover { border-color: var(--gm-brand); background: var(--gm-brand-soft); color: var(--gm-brand); transform: translateY(-1px); }
 .gm-icon-btn.is-favorite { color: var(--gm-accent); border-color: color-mix(in srgb, var(--gm-accent) 50%, var(--gm-border)); }
 
-/* Cards and layout */
 .gm-card {
   border: 1px solid var(--gm-border);
   border-radius: var(--gm-radius-md);
@@ -315,7 +301,6 @@ svg { flex: 0 0 auto; }
 .gm-wrap { flex-wrap: wrap; }
 .gm-section { padding-block: clamp(28px, 5vw, 72px); }
 
-/* Marketplace hero */
 .gm-market-hero {
   position: relative;
   overflow: hidden;
@@ -342,7 +327,6 @@ svg { flex: 0 0 auto; }
 .gm-market-hero p { max-width: 540px; color: var(--gm-text-muted); font-size: 1.08rem; }
 .gm-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; }
 
-/* Search */
 .gm-search {
   display: flex;
   align-items: center;
@@ -362,7 +346,6 @@ svg { flex: 0 0 auto; }
 .gm-search-lg { min-height: 62px; border-radius: var(--gm-radius-md); }
 .gm-search-lg input { font-size: 1.02rem; }
 
-/* Category chips and badges */
 .gm-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .gm-chip, .gm-badge {
   display: inline-flex;
@@ -383,7 +366,6 @@ svg { flex: 0 0 auto; }
 .gm-badge-used { border-color: color-mix(in srgb, var(--gm-warning) 45%, var(--gm-border)); background: color-mix(in srgb, var(--gm-warning) 12%, transparent); color: var(--gm-warning); }
 .gm-badge-sold { border-color: color-mix(in srgb, var(--gm-danger) 45%, var(--gm-border)); background: color-mix(in srgb, var(--gm-danger) 12%, transparent); color: var(--gm-danger); }
 
-/* Marketplace toolbar and filters */
 .gm-market-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
 .gm-filter-layout { display: grid; grid-template-columns: 248px minmax(0, 1fr); gap: 22px; align-items: start; }
 .gm-filter-panel { position: sticky; top: calc(var(--gm-header-height) + 18px); }
@@ -394,7 +376,6 @@ svg { flex: 0 0 auto; }
 .gm-filter-option input { accent-color: var(--gm-brand); }
 .gm-range { width: 100%; accent-color: var(--gm-brand); }
 
-/* Product cards */
 .gm-product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
 .gm-product-card { overflow: hidden; }
 .gm-product-card:hover { border-color: var(--gm-brand); }
@@ -410,7 +391,6 @@ svg { flex: 0 0 auto; }
 .gm-product-actions { display: flex; gap: 8px; }
 .gm-product-actions .gm-btn { flex: 1; }
 
-/* Product details */
 .gm-product-detail { display: grid; grid-template-columns: minmax(280px, .92fr) minmax(320px, 1.08fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
 .gm-gallery { display: grid; gap: 10px; }
 .gm-gallery-main { aspect-ratio: 1 / .86; overflow: hidden; border: 1px solid var(--gm-border); border-radius: var(--gm-radius-lg); background: var(--gm-surface-raised); }
@@ -425,7 +405,6 @@ svg { flex: 0 0 auto; }
 .gm-sticky-buy { position: sticky; bottom: 14px; z-index: 20; display: flex; gap: 9px; padding: 10px; border: 1px solid var(--gm-border-strong); border-radius: var(--gm-radius-md); background: var(--gm-glass); box-shadow: var(--gm-shadow); backdrop-filter: blur(18px); }
 .gm-sticky-buy .gm-btn { flex: 1; }
 
-/* Seller dashboard */
 .gm-stat-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 .gm-stat { display: grid; gap: 4px; }
 .gm-stat-value { color: var(--gm-text); font-family: var(--gm-display); font-size: clamp(1.45rem, 3vw, 2.35rem); font-weight: 800; letter-spacing: -.055em; }
@@ -438,7 +417,6 @@ svg { flex: 0 0 auto; }
 .gm-table td { color: var(--gm-text); }
 .gm-table tr:last-child td { border-bottom: 0; }
 
-/* Forms and listing creation */
 .gm-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .gm-field { display: grid; gap: 7px; }
 .gm-field-full { grid-column: 1 / -1; }
@@ -460,7 +438,6 @@ svg { flex: 0 0 auto; }
 .gm-upload-zone:hover, .gm-upload-zone.is-dragging { border-color: var(--gm-brand); background: var(--gm-brand-soft); }
 .gm-upload-zone-icon { color: var(--gm-brand); font-size: 2.2rem; }
 
-/* Chat */
 .gm-chat-layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: 620px; overflow: hidden; }
 .gm-chat-list { border-right: 1px solid var(--gm-border); }
 .gm-chat-item { display: flex; align-items: center; gap: 10px; padding: 13px; border-bottom: 1px solid var(--gm-border); color: var(--gm-text-muted); }
@@ -476,7 +453,6 @@ svg { flex: 0 0 auto; }
 .gm-chat-compose { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--gm-border); }
 .gm-chat-compose .gm-input { flex: 1; }
 
-/* PWA/offline feedback */
 .gm-install-banner, .gm-offline-banner { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 16px; border: 1px solid var(--gm-border); border-radius: var(--gm-radius-sm); background: var(--gm-surface); color: var(--gm-text); }
 .gm-offline-banner { border-color: color-mix(in srgb, var(--gm-warning) 50%, var(--gm-border)); background: color-mix(in srgb, var(--gm-warning) 10%, var(--gm-surface)); }
 .gm-status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--gm-success); }
@@ -484,13 +460,11 @@ svg { flex: 0 0 auto; }
 .gm-skeleton { overflow: hidden; min-height: 20px; border-radius: var(--gm-radius-xs); background: linear-gradient(90deg, var(--gm-surface-raised), var(--gm-surface-hover), var(--gm-surface-raised)); background-size: 200% 100%; animation: gm-shimmer 1.4s infinite linear; }
 @keyframes gm-shimmer { to { background-position: -200% 0; } }
 
-/* Mobile bottom navigation */
 .gm-mobile-nav { display: none; }
 .gm-mobile-nav a { display: grid; justify-items: center; gap: 3px; min-width: 58px; padding: 7px 5px; color: var(--gm-text-muted); font-size: var(--gm-xs-size); }
 .gm-mobile-nav a.is-active { color: var(--gm-brand); }
 .gm-mobile-nav .gm-mobile-sell { position: relative; top: -17px; display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: -17px; border: 4px solid var(--gm-bg); border-radius: 50%; background: var(--gm-accent); color: white; box-shadow: var(--gm-shadow-soft); font-weight: 800; }
 
-/* Responsive */
 @media (max-width: 1180px) {
   .gm-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gm-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -534,7 +508,6 @@ svg { flex: 0 0 auto; }
   .gm-market-toolbar > * { width: 100%; }
 }
 
-/* Accessibility and motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
