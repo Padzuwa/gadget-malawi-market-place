@@ -330,3 +330,178 @@
     gap: 12px;
   }
 }
+/* ============================================================
+   7. CHAT — extras beyond globals.css primitives
+   ============================================================ */
+
+.gm-chat-empty {
+  padding: 32px 20px;
+  text-align: center;
+  display: grid;
+  gap: 6px;
+}
+
+.gm-chat-empty-window {
+  display: grid;
+  gap: 6px;
+  place-content: center;
+  text-align: center;
+  height: 100%;
+  padding: 40px;
+}
+
+.gm-chat-window-empty {
+  display: grid;
+  place-items: center;
+}
+
+.gm-chat-empty-msg {
+  text-align: center;
+  padding: 24px;
+}
+
+/* Conversation list rows: richer layout */
+.gm-chat-item {
+  align-items: flex-start;
+  padding: 12px 14px;
+}
+
+.gm-chat-item-body {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.gm-chat-item-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.gm-chat-item-name {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--gm-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gm-chat-item-time {
+  font-size: 0.7rem;
+  color: var(--gm-text-subtle);
+  flex-shrink: 0;
+}
+
+.gm-chat-item-product {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  color: var(--gm-text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.gm-chat-item-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.gm-chat-item-preview-text {
+  font-size: 0.78rem;
+  color: var(--gm-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.gm-chat-item-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--gm-brand);
+  color: var(--gm-on-brand);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+/* Chat window header */
+.gm-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gm-chat-back {
+  display: none;
+}
+
+.gm-chat-header-info {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.gm-chat-header-name {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--gm-text);
+}
+
+.gm-chat-header-product {
+  font-size: 0.72rem;
+  color: var(--gm-brand);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gm-chat-header-product:hover {
+  text-decoration: underline;
+}
+
+/* Message bubble internals */
+.gm-message {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gm-message-body {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.gm-message-time {
+  align-self: flex-end;
+  font-size: 0.62rem;
+  opacity: 0.65;
+  margin-top: 2px;
+}
+
+/* Mobile: show back button, hide conversation list, full-height window */
+@media (max-width: 960px) {
+  .gm-chat-back {
+    display: inline-grid;
+  }
+
+  .gm-chat-header {
+    padding: 12px 14px;
+  }
+
+  .gm-chat-window {
+    min-height: 70vh;
+  }
+}

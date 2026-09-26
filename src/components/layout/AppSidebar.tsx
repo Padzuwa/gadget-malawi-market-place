@@ -14,20 +14,21 @@ import {
   faShieldHalved,
 } from '@fortawesome/free-solid-svg-icons';
 import { Logo } from '@/components/brand/Logo';
+import { UnreadBadge } from '@/components/chat/UnreadBadge';
 
 const primaryLinks = [
   { href: '/', label: 'Home', icon: faHouse },
   { href: '/browse', label: 'Browse', icon: faMagnifyingGlass },
-  { href: '/messages', label: 'Messages', icon: faMessage },
+  { href: '/messages', label: 'Messages', icon: faMessage, badgeKey: 'messages' },
   { href: '/favorites', label: 'Favorites', icon: faHeart },
-];
+] as const;
 
 const accountLinks = [
   { href: '/dashboard', label: 'My dashboard', icon: faStore },
   { href: '/profile', label: 'My profile', icon: faUser },
-];
+] as const;
 
-export function AppSidebar() {
+export function AppSidebar({ unreadCount }: { unreadCount: number }) {
   const pathname = usePathname();
 
   function isActive(href: string) {
@@ -51,6 +52,9 @@ export function AppSidebar() {
           >
             <FontAwesomeIcon icon={link.icon} />
             <span>{link.label}</span>
+            {'badgeKey' in link && link.badgeKey === 'messages' ? (
+              <UnreadBadge initialCount={unreadCount} />
+            ) : null}
           </Link>
         ))}
       </nav>

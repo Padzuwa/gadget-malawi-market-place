@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { UnreadBadge } from '@/components/chat/UnreadBadge';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -29,14 +30,13 @@ type DropdownId = 'category' | 'location' | 'condition' | 'price' | 'sort' | nul
  * Wrapper with Suspense boundary so useSearchParams() doesn't break
  * static prerendering of /_not-found and other pages.
  */
-export function AppHeader() {
+export function AppHeader({ unreadCount }: { unreadCount: number }) {
   return (
     <Suspense fallback={<AppHeaderSkeleton />}>
-      <AppHeaderInner />
+      <AppHeaderInner unreadCount={unreadCount} />
     </Suspense>
   );
 }
-
 function AppHeaderSkeleton() {
   return (
     <header className="gm-header">
@@ -45,7 +45,7 @@ function AppHeaderSkeleton() {
   );
 }
 
-function AppHeaderInner() {
+function AppHeaderInner({ unreadCount }: { unreadCount: number }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -215,9 +215,10 @@ function AppHeaderInner() {
             <span>Sell</span>
           </Link>
           <ThemeToggle />
-          <button type="button" className="gm-icon-btn" aria-label="Notifications">
-            <FontAwesomeIcon icon={faBell} />
-          </button>
+          <button type="button" className="gm-icon-btn gm-icon-btn-with-badge" aria-label="Notifications">
+    <FontAwesomeIcon icon={faBell} />
+    <UnreadBadge initialCount={unreadCount} />
+  </button>
           <UserMenu />
         </div>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { startConversation } from '@/app/messages/actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLocationDot,
@@ -114,6 +115,7 @@ export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
             {formatPrice(product.price)}
           </strong>
 
+          {/* Seller card */}
           <div className="gm-card gm-card-pad gm-stack" style={{ gap: 12 }}>
             <div className="gm-row" style={{ gap: 12 }}>
               <span className="gm-avatar">
@@ -135,15 +137,19 @@ export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
               </div>
             </div>
 
-            <button
-              type="button"
-              className="gm-btn gm-btn-secondary gm-btn-block"
-            >
-              <FontAwesomeIcon icon={faComment} />
-              Chat with seller
-            </button>
+        <form action={startConversation}>
+  <input type="hidden" name="productId" value={product.id} />
+  <button
+    type="submit"
+    className="gm-btn gm-btn-secondary gm-btn-block"
+  >
+    <FontAwesomeIcon icon={faComment} />
+    Chat with seller
+  </button>
+</form>
           </div>
 
+          {/* Description — now correctly outside the seller card */}
           <div className="gm-stack" style={{ gap: 8 }}>
             <strong
               className="gm-section-title"
@@ -158,6 +164,7 @@ export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
             </p>
           </div>
 
+          {/* Sticky buy bar — now correctly outside the seller card */}
           <div className="gm-sticky-buy">
             <button type="button" className="gm-btn gm-btn-accent">
               <FontAwesomeIcon icon={faTag} />
