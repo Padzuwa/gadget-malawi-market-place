@@ -86,8 +86,12 @@ const UUID_RE =
 
 export async function startConversation(formData: FormData): Promise<void> {
   const productId = String(formData.get('productId') || '').trim();
+  const slug = String(formData.get('slug') || '').trim();
 
-  // Bail early on malformed input — avoids a Postgres uuid cast error.
+  // Where to send the user back to when something goes wrong.
+  // Prefer the slug if we have it; fall back to /browse.
+  const backHref = slug ? `/product/${slug}` : '/browse';
+
   if (!UUID_RE.test(productId)) redirect('/browse');
 
   const supabase = await createClient();
@@ -96,13 +100,16 @@ export async function startConversation(formData: FormData): Promise<void> {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(
-      `/login?next=${encodeURIComponent(`/product/${productId}`)}`
-    );
+    redirect(`/login?next=${encodeURIComponent(backHref)}`);
   }
 
   const result = await getOrCreateConversation(productId);
-  if ('error' in result) redirect(`/product/${productId}`);
+
+  if ('error' in result) {
+    // Common case: user tried to chat about their own listing.
+    // Send them back to the product page instead of a 404.
+    redirect(backHref);
+  }
 
   redirect(`/messages/${result.id}`);
 }

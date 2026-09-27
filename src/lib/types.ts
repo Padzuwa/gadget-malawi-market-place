@@ -21,6 +21,7 @@ export type Product = {
   imageUrl: string;
   /** All image URLs. Empty if the listing has no photos. */
   images: string[];
+  sellerId: string;
   seller: {
     name: string;
     verified: boolean;

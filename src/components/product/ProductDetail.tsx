@@ -1,5 +1,5 @@
 'use client';
-import { ProductActions } from './ProductActions';
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,6 +17,7 @@ import {
   faTruck,
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
+import { ProductActions } from './ProductActions';
 import type { Product } from '@/lib/types';
 import { startConversation } from '@/app/messages/actions';
 
@@ -35,16 +36,21 @@ function formatPrice(amount: number | string | null | undefined): string {
 type ProductDetailProps = {
   product: Product;
   galleryImages: string[];
+  isOwnListing?: boolean;
 };
 
-export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
+export function ProductDetail({
+  product,
+  galleryImages,
+  isOwnListing = false,
+}: ProductDetailProps) {
   const [activeImage, setActiveImage] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
 
   function handleAddToCart() {
-    // Placeholder until cart is built in Step 19
+    // Placeholder until the cart is built in Step 19
     setAddedToCart(true);
     window.setTimeout(() => setAddedToCart(false), 1800);
   }
@@ -147,12 +153,14 @@ export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
               <span className="gm-small gm-muted">4.8</span>
             </span>
           </div>
+
+          {/* Share row */}
           <ProductActions
-  title={product.title}
-  price={product.price}
-  currency={product.currency}
-  slug={product.slug}
-/>
+            title={product.title}
+            price={product.price}
+            currency={product.currency}
+            slug={product.slug}
+          />
 
           {/* Seller card */}
           <div className="gm-card gm-card-pad gm-stack" style={{ gap: 12 }}>
@@ -176,16 +184,27 @@ export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
               </div>
             </div>
 
-            <form action={startConversation} style={{ display: 'block' }}>
-              <input type="hidden" name="productId" value={product.id} />
-              <button
-                type="submit"
+            {isOwnListing ? (
+              <Link
+                href="/dashboard"
                 className="gm-btn gm-btn-secondary gm-btn-block"
               >
                 <FontAwesomeIcon icon={faComment} />
-                Chat with seller
-              </button>
-            </form>
+                This is your listing — view dashboard
+              </Link>
+            ) : (
+              <form action={startConversation} style={{ display: 'block' }}>
+                <input type="hidden" name="productId" value={product.id} />
+                <input type="hidden" name="slug" value={product.slug} />
+                <button
+                  type="submit"
+                  className="gm-btn gm-btn-secondary gm-btn-block"
+                >
+                  <FontAwesomeIcon icon={faComment} />
+                  Chat with seller
+                </button>
+              </form>
+            )}
           </div>
 
           {/* Trust strip */}

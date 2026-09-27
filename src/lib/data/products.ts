@@ -4,6 +4,7 @@ import type { BrowseFilters } from '@/lib/filters';
 
 type ProductRow = {
   id: string;
+  seller_id: string;
   slug: string;
   title: string;
   subtitle: string | null;
@@ -37,6 +38,7 @@ const SELECT_COLUMNS = `
   condition,
   primary_image_url,
   image_urls,
+  seller_id,
   created_at,
   categories!inner(name),
   locations!inner(name),
@@ -60,6 +62,7 @@ function mapRow(row: ProductRow): Product {
     location: row.locations?.name ?? 'Malawi',
     imageUrl: finalImages[0] ?? '',
     images: finalImages,
+    sellerId: row.seller_id,
     seller: {
       name: row.profiles?.shop_name || row.profiles?.display_name || 'Seller',
       verified: Boolean(row.profiles?.shop_verified),
