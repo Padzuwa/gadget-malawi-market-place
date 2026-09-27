@@ -6,7 +6,7 @@ import './components.css';
 import { AppShell } from '@/components/layout/AppShell';
 import { SplashScreen } from '@/components/pwa/SplashScreen';
 import { ServiceWorkerRegister } from '@/components/pwa/ServiceWorkerRegister';
-
+import { SITE_URL } from '@/lib/site';
 config.autoAddCss = false;
 
 export const metadata: Metadata = {
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
   authors: [{ name: 'Gadget Malawi' }],
   creator: 'Gadget Malawi',
   publisher: 'Gadget Malawi',
-  metadataBase: new URL('https://gadgetmalawi.mw'),
-  manifest: '/manifest.webmanifest',
+  metadataBase: new URL(SITE_URL),
+    manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
     title: 'Gadget Malawi',
@@ -43,16 +43,25 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_MW',
-    url: 'https://gadgetmalawi.mw',
-    siteName: 'Gadget Malawi',
+    url: SITE_URL,  
+      siteName: 'Gadget Malawi',
     title: 'Gadget Malawi — Buy & Sell Gadgets Across Malawi',
     description:
-      'Verified sellers. Clear MWK prices. Secure mobile money payments. The trusted marketplace for gadgets and PC parts in Malawi.',
+      'Verified sellers. Clear MWK prices. Secure mobile money payments. The trusted marketplace for electronic gadgets, accessories and PC parts in Malawi.',
+          images: [
+      {
+        url: '/icons/icon-512.png',
+        width: 512,
+        height: 512,
+        alt: 'Gadget Malawi',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Gadget Malawi',
     description: 'The trusted marketplace for gadgets and PC parts in Malawi.',
+     images: ['/icons/icon-512.png'],
   },
    icons: {
     icon: [

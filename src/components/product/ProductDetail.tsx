@@ -1,5 +1,5 @@
 'use client';
-
+import { ProductActions } from './ProductActions';
 import { useState } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -147,6 +147,12 @@ export function ProductDetail({ product, galleryImages }: ProductDetailProps) {
               <span className="gm-small gm-muted">4.8</span>
             </span>
           </div>
+          <ProductActions
+  title={product.title}
+  price={product.price}
+  currency={product.currency}
+  slug={product.slug}
+/>
 
           {/* Seller card */}
           <div className="gm-card gm-card-pad gm-stack" style={{ gap: 12 }}>

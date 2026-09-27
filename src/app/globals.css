@@ -829,6 +829,138 @@ svg { flex: 0 0 auto; }
   backdrop-filter: blur(18px);
 }
 .gm-sticky-buy .gm-btn { flex: 1; }
+/* ============================================================
+   SHARE ROW — brand-coloured social share buttons
+   ============================================================ */
+
+.gm-share-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border: 1px solid var(--gm-border);
+  border-radius: var(--gm-radius-md);
+  background: var(--gm-surface);
+}
+
+.gm-share-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gm-text-muted);
+  font-size: var(--gm-small-size);
+  font-weight: 700;
+}
+.gm-share-heading svg {
+  color: var(--gm-brand);
+}
+
+.gm-share-icons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.gm-share-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform var(--gm-transition), box-shadow var(--gm-transition),
+    filter var(--gm-transition);
+}
+.gm-share-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+}
+.gm-share-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--gm-focus);
+}
+
+/* Brand colors */
+.gm-share-whatsapp {
+  background: #25d366;
+}
+.gm-share-whatsapp:hover {
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+}
+
+.gm-share-facebook {
+  background: #1877f2;
+}
+.gm-share-facebook:hover {
+  box-shadow: 0 6px 18px rgba(24, 119, 242, 0.35);
+}
+
+.gm-share-instagram {
+  background: linear-gradient(
+    45deg,
+    #f09433 0%,
+    #e6683c 25%,
+    #dc2743 50%,
+    #cc2366 75%,
+    #bc1888 100%
+  );
+}
+.gm-share-instagram:hover {
+  box-shadow: 0 6px 18px rgba(220, 39, 67, 0.35);
+}
+
+.gm-share-x {
+  background: #000;
+  border: 1px solid var(--gm-border-strong);
+}
+.gm-share-x:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.gm-share-copy {
+  background: var(--gm-surface-raised);
+  color: var(--gm-text);
+  border: 1px solid var(--gm-border);
+}
+.gm-share-copy:hover {
+  background: var(--gm-surface-hover);
+  box-shadow: var(--gm-shadow-soft);
+}
+
+/* Instagram hint (desktop fallback) */
+.gm-share-hint {
+  flex-basis: 100%;
+  margin: 4px 0 0;
+  color: var(--gm-text-muted);
+  font-size: var(--gm-xs-size);
+  font-weight: 600;
+}
+
+/* Mobile: tighten the row */
+@media (max-width: 700px) {
+  .gm-share-row {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .gm-share-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+  .gm-share-heading span {
+    display: none;
+  }
+  .gm-share-hint {
+    font-size: 0.68rem;
+  }
+}
 
 /* ============================================================
    STATS
