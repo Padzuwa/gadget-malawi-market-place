@@ -9,15 +9,16 @@ import {
   faPlus,
   faMessage,
   faUser,
+  faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 import { UnreadBadge } from '@/components/chat/UnreadBadge';
-
+import { CartBadge } from '@/components/cart/CartBadge';
 const links = [
   { href: '/', label: 'Home', icon: faHouse },
   { href: '/browse', label: 'Search', icon: faMagnifyingGlass },
   { href: '/sell', label: 'Sell', icon: faPlus, isSell: true },
+  { href: '/cart', label: 'Cart', icon: faCartShopping, badgeKey: 'cart' },
   { href: '/messages', label: 'Messages', icon: faMessage, badgeKey: 'messages' },
-  { href: '/profile', label: 'Profile', icon: faUser },
 ] as const;
 
 export function MobileNav({ unreadCount }: { unreadCount: number }) {
@@ -51,12 +52,13 @@ export function MobileNav({ unreadCount }: { unreadCount: number }) {
             className={active ? 'is-active' : ''}
             aria-current={active ? 'page' : undefined}
           >
-            <span className="gm-mobile-nav-icon">
-              <FontAwesomeIcon icon={link.icon} />
-              {'badgeKey' in link && link.badgeKey === 'messages' ? (
-                <UnreadBadge initialCount={unreadCount} />
-              ) : null}
-            </span>
+           <span className="gm-mobile-nav-icon">
+  <FontAwesomeIcon icon={link.icon} />
+  {'badgeKey' in link && link.badgeKey === 'messages' ? (
+    <UnreadBadge initialCount={unreadCount} />
+  ) : null}
+  {'badgeKey' in link && link.badgeKey === 'cart' ? <CartBadge /> : null}
+</span>
             <span>{link.label}</span>
           </Link>
         );

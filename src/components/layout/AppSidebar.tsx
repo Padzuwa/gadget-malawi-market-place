@@ -12,15 +12,18 @@ import {
   faStore,
   faPlus,
   faShieldHalved,
+  faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 import { Logo } from '@/components/brand/Logo';
 import { UnreadBadge } from '@/components/chat/UnreadBadge';
-
+import { CartBadge } from '@/components/cart/CartBadge';
+import link from 'next/link';
 const primaryLinks = [
   { href: '/', label: 'Home', icon: faHouse },
   { href: '/browse', label: 'Browse', icon: faMagnifyingGlass },
   { href: '/messages', label: 'Messages', icon: faMessage, badgeKey: 'messages' },
   { href: '/favorites', label: 'Favorites', icon: faHeart },
+  { href: '/cart', label: 'Cart', icon: faCartShopping, badgeKey: 'cart' },
 ] as const;
 
 const accountLinks = [
@@ -35,7 +38,10 @@ export function AppSidebar({ unreadCount }: { unreadCount: number }) {
     if (href === '/') return pathname === '/';
     return pathname.startsWith(href);
   }
-
+{'badgeKey' in link && link.badgeKey === 'messages' ? (
+  <UnreadBadge initialCount={unreadCount} />
+) : null}
+{'badgeKey' in link && link.badgeKey === 'cart' ? <CartBadge /> : null}
   return (
     <aside className="gm-sidebar">
       <Link href="/" className="gm-brand">

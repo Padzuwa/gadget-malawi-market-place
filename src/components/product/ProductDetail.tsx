@@ -7,7 +7,6 @@ import {
   faLocationDot,
   faCircleCheck,
   faComment,
-  faCartShopping,
   faTag,
   faArrowLeft,
   faImage,
@@ -20,6 +19,7 @@ import {
 import { ProductActions } from './ProductActions';
 import type { Product } from '@/lib/types';
 import { startConversation } from '@/app/messages/actions';
+import { AddToCartButton } from '@/components/cart/AddToCartButton';
 
 const conditionLabels: Record<Product['condition'], string> = {
   new: 'New',
@@ -47,13 +47,9 @@ export function ProductDetail({
   const [activeImage, setActiveImage] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [addedToCart, setAddedToCart] = useState(false);
+  const [ setAddedToCart] = useState(false);
 
-  function handleAddToCart() {
-    // Placeholder until the cart is built in Step 19
-    setAddedToCart(true);
-    window.setTimeout(() => setAddedToCart(false), 1800);
-  }
+  
 
   return (
     <div className="gm-stack" style={{ gap: 20 }}>
@@ -252,15 +248,7 @@ export function ProductDetail({
             </div>
 
             <div className="gm-sticky-buy-actions">
-              <button
-                type="button"
-                className="gm-btn gm-btn-secondary"
-                onClick={handleAddToCart}
-                aria-live="polite"
-              >
-                <FontAwesomeIcon icon={faCartShopping} />
-                <span>{addedToCart ? 'Added' : 'Add to cart'}</span>
-              </button>
+             <AddToCartButton product={product} className="gm-btn gm-btn-secondary" />
 
               <button type="button" className="gm-btn gm-btn-primary gm-btn-buy">
                 <FontAwesomeIcon icon={faTag} />

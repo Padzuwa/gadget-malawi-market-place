@@ -17,6 +17,8 @@ import { Logo } from '@/components/brand/Logo';
 import { UserMenu } from '@/components/auth/UserMenu';
 import { createClient } from '@/lib/supabase/client';
 import type { ProductCondition } from '@/lib/types';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { CartBadge } from '@/components/cart/CartBadge';
 
 const conditionOptions: { value: ProductCondition; label: string }[] = [
   { value: 'new', label: 'New' },
@@ -209,16 +211,27 @@ function AppHeaderInner({ unreadCount }: { unreadCount: number }) {
           </form>
         </div>
 
-        <div className="gm-header-right">
+              <div className="gm-header-right">
           <Link href="/sell" className="gm-btn gm-btn-primary gm-btn-sm">
             <FontAwesomeIcon icon={faPlus} />
             <span>Sell</span>
           </Link>
+
           <ThemeToggle />
-          <button type="button" className="gm-icon-btn gm-icon-btn-with-badge" aria-label="Notifications">
-    <FontAwesomeIcon icon={faBell} />
-    <UnreadBadge initialCount={unreadCount} />
-  </button>
+
+          <Link
+            href="/cart"
+            className="gm-icon-btn gm-icon-btn-with-badge gm-cart-link"
+            aria-label="Cart"
+          >
+            <FontAwesomeIcon icon={faCartShopping} />
+            <CartBadge />
+          </Link>
+
+          <button type="button" className="gm-icon-btn" aria-label="Notifications">
+            <FontAwesomeIcon icon={faBell} />
+          </button>
+
           <UserMenu />
         </div>
       </div>
