@@ -2,26 +2,25 @@
 
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faShieldHalved,
-  faXmark,
-  faCircleInfo,
-} from '@fortawesome/free-solid-svg-icons';
+import { faShieldHalved, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 type Props = {
   conversationId: string;
+  /** If the other party is a verified shop, we skip the warning entirely. */
+  verified: boolean;
 };
 
 const KEY_PREFIX = 'gm-chat-safety-seen:';
 
-export function ChatSafetyBanner({ conversationId }: Props) {
+export function ChatSafetyBanner({ conversationId, verified }: Props) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (verified) return; // Verified shops don't need the warning
     const seen = window.localStorage.getItem(KEY_PREFIX + conversationId);
     if (!seen) setVisible(true);
-  }, [conversationId]);
+  }, [conversationId, verified]);
 
   function dismiss() {
     try {

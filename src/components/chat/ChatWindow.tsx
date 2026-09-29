@@ -240,8 +240,10 @@ export function ChatWindow({
 
       {/* Safety banner sits between header and scroll area — always visible
           until dismissed, never scrolls away with messages. */}
-      <ChatSafetyBanner conversationId={conversationId} />
-
+<ChatSafetyBanner
+  conversationId={conversationId}
+  verified={otherPartyVerified}
+/>
       <div
         className="gm-chat-messages"
         ref={scrollRef}
