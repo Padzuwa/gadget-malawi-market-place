@@ -110,6 +110,7 @@ export async function getConversation(
   otherPartyId: string;
   otherPartyName: string;
   otherPartyAvatar: string | null;
+  otherPartyVerified: boolean;
   productId: string | null;
   productTitle: string | null;
   productSlug: string | null;
@@ -123,7 +124,7 @@ export async function getConversation(
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data: conv, error: convError } = await supabase
+    const { data: conv, error: convError } = await supabase
     .from('conversations')
     .select(
       `
@@ -132,8 +133,8 @@ export async function getConversation(
         seller_id,
         product_id,
         products:products(id, title, slug, primary_image_url),
-        buyer:profiles!conversations_buyer_id_fkey(id, display_name, shop_name, avatar_url),
-        seller:profiles!conversations_seller_id_fkey(id, display_name, shop_name, avatar_url)
+        buyer:profiles!conversations_buyer_id_fkey(id, display_name, shop_name, avatar_url, shop_verified),
+        seller:profiles!conversations_seller_id_fkey(id, display_name, shop_name, avatar_url, shop_verified)
       `
     )
     .eq('id', conversationId)
@@ -155,7 +156,7 @@ export async function getConversation(
     .eq('conversation_id', conversationId)
     .order('created_at', { ascending: true });
 
-  return {
+   return {
     id: conv.id as string,
     otherPartyId: (isBuyer ? conv.seller_id : conv.buyer_id) as string,
     otherPartyName:
@@ -164,6 +165,7 @@ export async function getConversation(
         'User') as string,
     otherPartyAvatar:
       (otherProfile?.avatar_url as string | null | undefined) ?? null,
+    otherPartyVerified: Boolean(otherProfile?.shop_verified),
     productId: (conv.product_id as string | null) ?? null,
     productTitle: (product?.title as string | undefined) ?? null,
     productSlug: (product?.slug as string | undefined) ?? null,

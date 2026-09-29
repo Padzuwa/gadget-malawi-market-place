@@ -10,9 +10,12 @@ import {
   faCheckDouble,
   faCommentDots,
   faSpinner,
+  faCircleCheck,
+  faFlag,
 } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from '@/lib/supabase/client';
 import { sendMessage } from '@/app/messages/actions';
+import { ChatSafetyBanner } from './ChatSafetyBanner';
 
 type Message = {
   id: string;
@@ -26,6 +29,7 @@ type Props = {
   conversationId: string;
   currentUserId: string;
   otherPartyName: string;
+  otherPartyVerified: boolean;
   productTitle: string | null;
   productSlug: string | null;
   initialMessages: Message[];
@@ -61,6 +65,7 @@ export function ChatWindow({
   conversationId,
   currentUserId,
   otherPartyName,
+  otherPartyVerified,
   productTitle,
   productSlug,
   initialMessages,
@@ -197,7 +202,16 @@ export function ChatWindow({
         </span>
 
         <div className="gm-chat-header-info">
-          <strong className="gm-chat-header-name">{otherPartyName}</strong>
+          <strong className="gm-chat-header-name">
+            {otherPartyName}
+            {otherPartyVerified ? (
+              <FontAwesomeIcon
+                icon={faCircleCheck}
+                className="gm-chat-header-verified"
+                aria-label="Verified seller"
+              />
+            ) : null}
+          </strong>
           {productTitle && productSlug ? (
             <Link
               href={`/product/${productSlug}`}
@@ -211,9 +225,30 @@ export function ChatWindow({
             </span>
           )}
         </div>
+
+        <a
+          href={`mailto:support@gadgetmalawi.mw?subject=${encodeURIComponent(
+            `Report conversation ${conversationId}`
+          )}`}
+          className="gm-icon-btn gm-chat-report"
+          aria-label="Report conversation"
+          title="Report"
+        >
+          <FontAwesomeIcon icon={faFlag} />
+        </a>
       </div>
 
-      <div className="gm-chat-messages" ref={scrollRef}>
+      {/* Safety banner sits between header and scroll area — always visible
+          until dismissed, never scrolls away with messages. */}
+      <ChatSafetyBanner conversationId={conversationId} />
+
+      <div
+        className="gm-chat-messages"
+        ref={scrollRef}
+        role="log"
+        aria-live="polite"
+        aria-label="Messages"
+      >
         {messages.length === 0 ? (
           <div className="gm-chat-empty-thread">
             <FontAwesomeIcon icon={faCommentDots} />

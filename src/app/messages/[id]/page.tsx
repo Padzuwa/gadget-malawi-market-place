@@ -1,10 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import {
-  getConversation,
-  getMyConversations,
-} from '@/lib/data/chat';
+import { getConversation, getMyConversations } from '@/lib/data/chat';
 import { ConversationList } from '@/components/chat/ConversationList';
 import { ChatWindow } from '@/components/chat/ChatWindow';
 import { markConversationRead } from '@/app/messages/actions';
@@ -52,12 +49,13 @@ export default async function ConversationPage({ params }: PageProps) {
       </div>
 
       <div className="gm-card" style={{ overflow: 'hidden' }}>
-<div className="gm-chat-layout gm-chat-layout-thread">
-              <ConversationList conversations={conversations} />
+        <div className="gm-chat-layout gm-chat-layout-thread">
+          <ConversationList conversations={conversations} />
           <ChatWindow
             conversationId={conversation.id}
             currentUserId={conversation.currentUserId}
             otherPartyName={conversation.otherPartyName}
+            otherPartyVerified={conversation.otherPartyVerified}
             productTitle={conversation.productTitle}
             productSlug={conversation.productSlug}
             initialMessages={conversation.messages}
