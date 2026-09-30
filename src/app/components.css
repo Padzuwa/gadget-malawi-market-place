@@ -1272,3 +1272,22 @@
     font-size: 0.92rem;
   }
 }
+/* ============================================================
+   9. FAVORITES
+   ============================================================ */
+
+.gm-fav-empty {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  text-align: center;
+  padding: 60px 20px;
+  border: 1px solid var(--gm-border);
+  border-radius: var(--gm-radius-md);
+  background: var(--gm-surface);
+}
+.gm-fav-empty > svg {
+  font-size: 3rem;
+  color: var(--gm-accent);
+  opacity: 0.5;
+}

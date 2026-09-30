@@ -1,5 +1,6 @@
 'use client';
 
+import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { useState } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -37,16 +38,17 @@ type ProductDetailProps = {
   product: Product;
   galleryImages: string[];
   isOwnListing?: boolean;
+  isFavorited?: boolean;
 };
 
 export function ProductDetail({
   product,
   galleryImages,
   isOwnListing = false,
-}: ProductDetailProps) {
+  isFavorited = false,
+}: ProductDetailProps)  {
   const [activeImage, setActiveImage] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
   const [ setAddedToCart] = useState(false);
 
   
@@ -109,18 +111,11 @@ export function ProductDetail({
               <span className="gm-badge">{product.category}</span>
             </div>
 
-            <button
-              type="button"
-              className={`gm-icon-btn gm-product-fav${
-                isFavorite ? ' is-favorite' : ''
-              }`}
-              onClick={() => setIsFavorite((v) => !v)}
-              aria-label={
-                isFavorite ? 'Remove from favorites' : 'Add to favorites'
-              }
-            >
-              <FontAwesomeIcon icon={faHeart} />
-            </button>
+           <FavoriteButton
+  productId={product.id}
+  initialFavorited={isFavorited}
+  variant="icon"
+/>
           </div>
 
           {/* Title + subtitle */}

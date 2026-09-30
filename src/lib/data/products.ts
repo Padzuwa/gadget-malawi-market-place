@@ -42,7 +42,7 @@ const SELECT_COLUMNS = `
   created_at,
   categories!inner(name),
   locations!inner(name),
-  profiles:profiles(display_name, shop_name, shop_verified)
+  profiles:profiles!products_seller_id_fkey(display_name, shop_name, shop_verified)
 `;
 
 function mapRow(row: ProductRow): Product {

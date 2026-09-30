@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { ProductDetail } from '@/components/product/ProductDetail';
 import { SimilarProducts } from '@/components/product/SimilarProducts';
 import { getProductBySlug, getSimilarProducts } from '@/lib/data/products';
+import { getMyFavoriteIds } from '@/lib/data/favorites';
 import { createClient } from '@/lib/supabase/server';
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -38,7 +39,13 @@ export default async function ProductPage({ params }: PageProps) {
   } = await supabase.auth.getUser();
 
   const isOwnListing = !!user && user.id === product.sellerId;
-  const similar = await getSimilarProducts(product, 4);
+
+  const [similar, favoriteIds] = await Promise.all([
+    getSimilarProducts(product, 4),
+    user ? getMyFavoriteIds() : Promise.resolve(new Set<string>()),
+  ]);
+
+  const isFavorited = favoriteIds.has(product.id);
 
   return (
     <>
@@ -46,6 +53,7 @@ export default async function ProductPage({ params }: PageProps) {
         product={product}
         galleryImages={product.images}
         isOwnListing={isOwnListing}
+        isFavorited={isFavorited}
       />
       {similar.length > 0 ? (
         <SimilarProducts products={similar} currentProduct={product} />

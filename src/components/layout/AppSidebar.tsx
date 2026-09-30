@@ -1,5 +1,6 @@
 'use client';
 
+import { FavoriteBadge } from '@/components/favorites/FavoriteBadge';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -21,9 +22,9 @@ import link from 'next/link';
 const primaryLinks = [
   { href: '/', label: 'Home', icon: faHouse },
   { href: '/browse', label: 'Browse', icon: faMagnifyingGlass },
-  { href: '/messages', label: 'Messages', icon: faMessage, badgeKey: 'messages' },
-  { href: '/favorites', label: 'Favorites', icon: faHeart },
   { href: '/cart', label: 'Cart', icon: faCartShopping, badgeKey: 'cart' },
+  { href: '/messages', label: 'Messages', icon: faMessage, badgeKey: 'messages' },
+  { href: '/favorites', label: 'Favorites', icon: faHeart, badgeKey: 'favorites' },
 ] as const;
 
 const accountLinks = [
@@ -31,7 +32,13 @@ const accountLinks = [
   { href: '/profile', label: 'My profile', icon: faUser },
 ] as const;
 
-export function AppSidebar({ unreadCount }: { unreadCount: number }) {
+export function AppSidebar({
+  unreadCount,
+  favoriteCount,
+}: {
+  unreadCount: number;
+  favoriteCount: number;
+}) {
   const pathname = usePathname();
 
   function isActive(href: string) {
@@ -42,6 +49,9 @@ export function AppSidebar({ unreadCount }: { unreadCount: number }) {
   <UnreadBadge initialCount={unreadCount} />
 ) : null}
 {'badgeKey' in link && link.badgeKey === 'cart' ? <CartBadge /> : null}
+{'badgeKey' in link && link.badgeKey === 'favorites' ? (
+  <FavoriteBadge initialCount={favoriteCount} />
+) : null}
   return (
     <aside className="gm-sidebar">
       <Link href="/" className="gm-brand">
