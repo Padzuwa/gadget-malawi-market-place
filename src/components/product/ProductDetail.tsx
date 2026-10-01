@@ -3,6 +3,7 @@
 import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { useState } from 'react';
 import Link from 'next/link';
+import { ReportButton } from '@/components/reports/ReportButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLocationDot,
@@ -112,10 +113,10 @@ export function ProductDetail({
             </div>
 
            <FavoriteButton
-  productId={product.id}
-  initialFavorited={isFavorited}
-  variant="icon"
-/>
+              productId={product.id}
+              initialFavorited={isFavorited}
+              variant="icon"
+            />
           </div>
 
           {/* Title + subtitle */}
@@ -152,6 +153,13 @@ export function ProductDetail({
             currency={product.currency}
             slug={product.slug}
           />
+
+                      {/* Report listing — hidden on own listings */}
+          {!isOwnListing ? (
+            <div className="gm-product-report-row">
+              <ReportButton productId={product.id} />
+            </div>
+          ) : null}
 
           {/* Seller card */}
           <div className="gm-card gm-card-pad gm-stack" style={{ gap: 12 }}>
