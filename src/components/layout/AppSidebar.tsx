@@ -14,6 +14,8 @@ import {
   faPlus,
   faShieldHalved,
   faCartShopping,
+  faBox,
+  faBoxOpen,
 } from '@fortawesome/free-solid-svg-icons';
 import { Logo } from '@/components/brand/Logo';
 import { UnreadBadge } from '@/components/chat/UnreadBadge';
@@ -28,6 +30,7 @@ const primaryLinks = [
 ] as const;
 
 const accountLinks = [
+  { href: '/orders', label: 'My orders', icon: faBoxOpen },
   { href: '/dashboard', label: 'My dashboard', icon: faStore },
   { href: '/profile', label: 'My profile', icon: faUser },
 ] as const;
