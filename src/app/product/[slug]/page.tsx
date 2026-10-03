@@ -4,6 +4,7 @@ import { ProductDetail } from '@/components/product/ProductDetail';
 import { SimilarProducts } from '@/components/product/SimilarProducts';
 import { getProductBySlug, getSimilarProducts } from '@/lib/data/products';
 import { getMyFavoriteIds } from '@/lib/data/favorites';
+import { ProductViewTracker } from '@/components/product/ProductViewTracker';                                      
 import { createClient } from '@/lib/supabase/server';
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -32,7 +33,7 @@ export default async function ProductPage({ params }: PageProps) {
   if (!product) {
     notFound();
   }
-
+      
   const supabase = await createClient();
   const {
     data: { user },
@@ -49,6 +50,7 @@ export default async function ProductPage({ params }: PageProps) {
 
   return (
     <>
+    <ProductViewTracker productId={product.id} />
       <ProductDetail
         product={product}
         galleryImages={product.images}

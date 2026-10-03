@@ -31,7 +31,6 @@ const companyLinks = [
 const supportLinks = [
   { label: 'Help centre', href: '/help' },
   { label: 'Trust & safety', href: '/trust' },
-  { label: 'Buyer protection', href: '/buyer-protection' },
   { label: 'Report a listing', href: '/report' },
 ];
 
@@ -124,7 +123,7 @@ export function AppFooter() {
                 </a>
               </li>
               <li>
-                <a href="tel:+265123456789">
+                <a href="tel:+265992404606">
                   <FontAwesomeIcon icon={faPhone} /> +265 992 404 606
                 </a>
               </li>
