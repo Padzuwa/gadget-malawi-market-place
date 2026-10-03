@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/site';
 import { notFound } from 'next/navigation';
 import { ProductDetail } from '@/components/product/ProductDetail';
 import { SimilarProducts } from '@/components/product/SimilarProducts';
@@ -20,9 +21,33 @@ export async function generateMetadata({
     return { title: 'Product not found' };
   }
 
+  const description = `${product.title} — ${product.subtitle}. ${product.condition} condition, located in ${product.location}. ${product.currency} ${product.price}.`;
+
   return {
     title: product.title,
-    description: `${product.title} — ${product.subtitle}. ${product.condition} condition, located in ${product.location}. ${product.currency} ${product.price}.`,
+    description,
+    openGraph: {
+      title: product.title,
+      description,
+      url: `${SITE_URL}/product/${product.slug}`,
+      type: 'website',
+      images: product.imageUrl
+        ? [
+            {
+              url: product.imageUrl,
+              width: 800,
+              height: 600,
+              alt: product.title,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.title,
+      description,
+      images: product.imageUrl ? [product.imageUrl] : undefined,
+    },
   };
 }
 
