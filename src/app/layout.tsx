@@ -10,6 +10,7 @@ import { SITE_URL } from '@/lib/site';
 config.autoAddCss = false;
 
 export const metadata: Metadata = {
+  
   title: {
     default: 'Gadget Malawi — Buy & Sell Gadgets, Phones, Laptops, PC Parts',
     template: '%s · Gadget Malawi',
@@ -74,6 +75,7 @@ export const metadata: Metadata = {
     ],
   },
   robots: { index: true, follow: true },
+  
 };
 
 export const viewport: Viewport = {
@@ -95,6 +97,7 @@ export default function RootLayout({
     <html lang="en-MW" data-theme="dark" suppressHydrationWarning>
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="google-site-verification" content="pfSlNceSnVCf5Oo6vjG7-iOkxN4l6bycCzf9yX4z3ug" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
