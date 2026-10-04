@@ -5,8 +5,9 @@ import { ProductDetail } from '@/components/product/ProductDetail';
 import { SimilarProducts } from '@/components/product/SimilarProducts';
 import { getProductBySlug, getSimilarProducts } from '@/lib/data/products';
 import { getMyFavoriteIds } from '@/lib/data/favorites';
-import { ProductViewTracker } from '@/components/product/ProductViewTracker';                                      
+import { ProductViewTracker } from '@/components/product/ProductViewTracker';
 import { createClient } from '@/lib/supabase/server';
+
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
@@ -23,6 +24,13 @@ export async function generateMetadata({
 
   const description = `${product.title} — ${product.subtitle}. ${product.condition} condition, located in ${product.location}. ${product.currency} ${product.price}.`;
 
+  // Route OG images through Next.js's image optimizer.
+  // WhatsApp and Facebook reject WebP. The optimizer re-encodes to JPEG
+  // for crawlers that don't send Accept: image/webp.
+  const ogImage = product.imageUrl
+    ? `${SITE_URL}/_next/image?url=${encodeURIComponent(product.imageUrl)}&w=1200&q=80`
+    : undefined;
+
   return {
     title: product.title,
     description,
@@ -31,22 +39,13 @@ export async function generateMetadata({
       description,
       url: `${SITE_URL}/product/${product.slug}`,
       type: 'website',
-      images: product.imageUrl
-        ? [
-            {
-              url: product.imageUrl,
-              width: 800,
-              height: 600,
-              alt: product.title,
-            },
-          ]
-        : undefined,
+      images: ogImage ? [{ url: ogImage, alt: product.title }] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title: product.title,
       description,
-      images: product.imageUrl ? [product.imageUrl] : undefined,
+      images: ogImage ? [ogImage] : undefined,
     },
   };
 }
@@ -58,7 +57,7 @@ export default async function ProductPage({ params }: PageProps) {
   if (!product) {
     notFound();
   }
-      
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -75,7 +74,7 @@ export default async function ProductPage({ params }: PageProps) {
 
   return (
     <>
-    <ProductViewTracker productId={product.id} />
+      <ProductViewTracker productId={product.id} />
       <ProductDetail
         product={product}
         galleryImages={product.images}
