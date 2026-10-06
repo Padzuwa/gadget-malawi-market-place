@@ -11,11 +11,13 @@ import {
 import { submitReport, type ReportReason } from '@/app/reports/actions';
 
 type Props = {
-  productId: string;
   className?: string;
-};
+} & (
+  | { kind?: 'product'; productId: string; conversationId?: never }
+  | { kind: 'conversation'; conversationId: string; productId?: never }
+);
 
-const REASON_OPTIONS: { value: ReportReason; label: string; hint: string }[] = [
+const PRODUCT_REASONS: { value: ReportReason; label: string; hint: string }[] = [
   {
     value: 'scam',
     label: 'Scam or fraud',
@@ -51,14 +53,47 @@ const REASON_OPTIONS: { value: ReportReason; label: string; hint: string }[] = [
     label: 'Item not allowed',
     hint: 'Does not belong on this marketplace.',
   },
-  {
-    value: 'other',
-    label: 'Something else',
-    hint: 'Tell us more below.',
-  },
+  { value: 'other', label: 'Something else', hint: 'Tell us more below.' },
 ];
 
-export function ReportButton({ productId, className }: Props) {
+const CONVERSATION_REASONS: { value: ReportReason; label: string; hint: string }[] = [
+  {
+    value: 'scam',
+    label: 'Scam or fraud',
+    hint: 'Trying to get me to pay outside the platform.',
+  },
+  {
+    value: 'harassment',
+    label: 'Harassment or abuse',
+    hint: 'Threats, insults, or offensive language.',
+  },
+  {
+    value: 'off-platform',
+    label: 'Pushing off-platform',
+    hint: 'Repeatedly asking me to move to WhatsApp or pay elsewhere.',
+  },
+  {
+    value: 'spam',
+    label: 'Spam',
+    hint: 'Promotional messages, unrelated to the listing.',
+  },
+  {
+    value: 'offensive',
+    label: 'Offensive content',
+    hint: 'Inappropriate images or messages.',
+  },
+  { value: 'other', label: 'Something else', hint: 'Tell us more below.' },
+];
+
+function getReasons(kind: 'product' | 'conversation') {
+  return kind === 'conversation' ? CONVERSATION_REASONS : PRODUCT_REASONS;
+}
+
+export function ReportButton(props: Props) {
+  const { className } = props;
+  const kind = props.kind ?? 'product';
+  const reasons = getReasons(kind);
+
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<ReportReason | null>(null);
   const [details, setDetails] = useState('');
@@ -66,7 +101,6 @@ export function ReportButton({ productId, className }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [pending, startTransition] = useTransition();
 
-  // Lock body scroll + escape-to-close while modal is open
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -92,7 +126,6 @@ export function ReportButton({ productId, className }: Props) {
 
   function close() {
     setOpen(false);
-    // Delay reset so the closing animation doesn't flicker
     window.setTimeout(reset, 200);
   }
 
@@ -104,11 +137,20 @@ export function ReportButton({ productId, className }: Props) {
     setError(null);
 
     startTransition(async () => {
-      const result = await submitReport({
-        productId,
-        reason,
-        details: details.trim() || undefined,
-      });
+      const result =
+        kind === 'conversation'
+          ? await submitReport({
+              kind: 'conversation',
+              conversationId: props.conversationId as string,
+              reason,
+              details: details.trim() || undefined,
+            })
+          : await submitReport({
+              kind: 'product',
+              productId: props.productId as string,
+              reason,
+              details: details.trim() || undefined,
+            });
 
       if (!result.ok) {
         setError(result.error);
@@ -118,13 +160,20 @@ export function ReportButton({ productId, className }: Props) {
     });
   }
 
+  const title =
+    kind === 'conversation' ? 'Report this conversation' : 'Report this listing';
+  const subtitle =
+    kind === 'conversation'
+      ? 'Your report is anonymous to the other party. We review every one.'
+      : 'Your report is anonymous to the seller. We review every one.';
+
   return (
     <>
       <button
         type="button"
         className={className ?? 'gm-btn gm-btn-ghost gm-btn-sm'}
         onClick={() => setOpen(true)}
-        aria-label="Report this listing"
+        aria-label={title}
       >
         <FontAwesomeIcon icon={faFlag} />
         Report
@@ -144,11 +193,9 @@ export function ReportButton({ productId, className }: Props) {
             <header className="gm-report-header">
               <div>
                 <h2 id="report-title" className="gm-report-title">
-                  Report this listing
+                  {title}
                 </h2>
-                <p className="gm-report-sub">
-                  Your report is anonymous to the seller. Only Gadget Mw Team reviews the reports.
-                </p>
+                <p className="gm-report-sub">{subtitle}</p>
               </div>
               <button
                 type="button"
@@ -165,10 +212,10 @@ export function ReportButton({ productId, className }: Props) {
                 <div className="gm-report-success-icon">
                   <FontAwesomeIcon icon={faCheck} />
                 </div>
-                <h3>Thanks, Your report has been received</h3>
+                <h3>Thanks — report received</h3>
                 <p className="gm-small gm-muted">
-                  Our team will review it shortly. If you see the same
-                  listing from another account, report that one too.
+                  Our team will review it shortly. If you keep seeing the same
+                  behavior, report that too.
                 </p>
                 <button
                   type="button"
@@ -181,10 +228,10 @@ export function ReportButton({ productId, className }: Props) {
             ) : (
               <>
                 <div className="gm-report-body">
-                  <p className="gm-report-label">Why are you reporting it?</p>
+                  <p className="gm-report-label">Why are you reporting this?</p>
 
                   <div className="gm-report-reasons">
-                    {REASON_OPTIONS.map((option) => (
+                    {reasons.map((option) => (
                       <label
                         key={option.value}
                         className={`gm-report-reason${

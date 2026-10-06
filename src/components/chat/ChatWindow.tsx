@@ -11,11 +11,11 @@ import {
   faCommentDots,
   faSpinner,
   faCircleCheck,
-  faFlag,
 } from '@fortawesome/free-solid-svg-icons';
 import { createClient } from '@/lib/supabase/client';
 import { sendMessage } from '@/app/messages/actions';
 import { ChatSafetyBanner } from './ChatSafetyBanner';
+import { ReportButton } from '@/components/reports/ReportButton';
 
 type Message = {
   id: string;
@@ -226,24 +226,20 @@ export function ChatWindow({
           )}
         </div>
 
-        <a
-          href={`mailto:support@gadgetmalawi.mw?subject=${encodeURIComponent(
-            `Report conversation ${conversationId}`
-          )}`}
+        <ReportButton
+          kind="conversation"
+          conversationId={conversationId}
           className="gm-icon-btn gm-chat-report"
-          aria-label="Report conversation"
-          title="Report"
-        >
-          <FontAwesomeIcon icon={faFlag} />
-        </a>
+        />
       </div>
 
       {/* Safety banner sits between header and scroll area — always visible
           until dismissed, never scrolls away with messages. */}
-<ChatSafetyBanner
-  conversationId={conversationId}
-  verified={otherPartyVerified}
-/>
+      <ChatSafetyBanner
+        conversationId={conversationId}
+        verified={otherPartyVerified}
+      />
+
       <div
         className="gm-chat-messages"
         ref={scrollRef}
@@ -277,7 +273,9 @@ export function ChatWindow({
                 return (
                   <div
                     key={m.id}
-                    className={`gm-message-row${isMine ? ' is-mine' : ' is-theirs'}`}
+                    className={`gm-message-row${
+                      isMine ? ' is-mine' : ' is-theirs'
+                    }`}
                   >
                     {!isMine ? (
                       <span
@@ -291,7 +289,9 @@ export function ChatWindow({
                     ) : null}
 
                     <div
-                      className={`gm-message ${isMine ? 'is-mine' : 'is-theirs'}`}
+                      className={`gm-message ${
+                        isMine ? 'is-mine' : 'is-theirs'
+                      }`}
                     >
                       <span className="gm-message-body">{m.body}</span>
                       <span className="gm-message-meta">

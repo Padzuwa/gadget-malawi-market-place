@@ -1,27 +1,26 @@
 'use client';
 
-import { FavoriteButton } from '@/components/favorites/FavoriteButton';
 import { useState } from 'react';
 import Link from 'next/link';
-import { ReportButton } from '@/components/reports/ReportButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLocationDot,
   faCircleCheck,
   faComment,
-  faTag,
   faArrowLeft,
   faImage,
-  faHeart,
   faShieldHalved,
   faBolt,
   faTruck,
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
+import { FavoriteButton } from '@/components/favorites/FavoriteButton';
+import { ReportButton } from '@/components/reports/ReportButton';
 import { ProductActions } from './ProductActions';
-import type { Product } from '@/lib/types';
-import { startConversation } from '@/app/messages/actions';
 import { AddToCartButton } from '@/components/cart/AddToCartButton';
+import { BuyNowButton } from '@/components/cart/BuyNowButton';
+import { startConversation } from '@/app/messages/actions';
+import type { Product } from '@/lib/types';
 
 const conditionLabels: Record<Product['condition'], string> = {
   new: 'New',
@@ -47,12 +46,9 @@ export function ProductDetail({
   galleryImages,
   isOwnListing = false,
   isFavorited = false,
-}: ProductDetailProps)  {
+}: ProductDetailProps) {
   const [activeImage, setActiveImage] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
-  const [ setAddedToCart] = useState(false);
-
-  
 
   return (
     <div className="gm-stack" style={{ gap: 20 }}>
@@ -112,7 +108,7 @@ export function ProductDetail({
               <span className="gm-badge">{product.category}</span>
             </div>
 
-           <FavoriteButton
+            <FavoriteButton
               productId={product.id}
               initialFavorited={isFavorited}
               variant="icon"
@@ -154,7 +150,7 @@ export function ProductDetail({
             slug={product.slug}
           />
 
-                      {/* Report listing — hidden on own listings */}
+          {/* Report listing — hidden on own listings */}
           {!isOwnListing ? (
             <div className="gm-product-report-row">
               <ReportButton productId={product.id} />
@@ -237,28 +233,32 @@ export function ProductDetail({
             </p>
           </div>
 
-          {/* Sticky buy bar */}
-          <div className="gm-sticky-buy">
-            <div className="gm-sticky-buy-info">
-              <strong className="gm-sticky-price">
-                <small>{product.currency}</small>
-                {formatPrice(product.price)}
-              </strong>
-              <span className="gm-sticky-hint">
-                <FontAwesomeIcon icon={faShieldHalved} />
-                Secure checkout · Buyer protection
-              </span>
-            </div>
+          {/* Sticky buy bar — hidden when you're the seller */}
+          {!isOwnListing ? (
+            <div className="gm-sticky-buy">
+              <div className="gm-sticky-buy-info">
+                <strong className="gm-sticky-price">
+                  <small>{product.currency}</small>
+                  {formatPrice(product.price)}
+                </strong>
+                <span className="gm-sticky-hint">
+                  <FontAwesomeIcon icon={faShieldHalved} />
+                  Secure checkout · Buyer protection
+                </span>
+              </div>
 
-            <div className="gm-sticky-buy-actions">
-             <AddToCartButton product={product} className="gm-btn gm-btn-secondary" />
-
-              <button type="button" className="gm-btn gm-btn-primary gm-btn-buy">
-                <FontAwesomeIcon icon={faTag} />
-                <span>Buy now</span>
-              </button>
+              <div className="gm-sticky-buy-actions">
+                <AddToCartButton
+                  product={product}
+                  className="gm-btn gm-btn-secondary"
+                />
+                <BuyNowButton
+                  product={product}
+                  className="gm-btn gm-btn-primary gm-btn-buy"
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </div>
