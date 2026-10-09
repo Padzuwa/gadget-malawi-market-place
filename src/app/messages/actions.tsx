@@ -3,7 +3,10 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { getOrCreateConversation } from '@/lib/data/chat';
+import {
+  getOrCreateConversation,
+  getOrCreateUserConversation,
+} from '@/lib/data/chat';
 
 export type SendMessageResult =
   | {
@@ -88,8 +91,6 @@ export async function startConversation(formData: FormData): Promise<void> {
   const productId = String(formData.get('productId') || '').trim();
   const slug = String(formData.get('slug') || '').trim();
 
-  // Where to send the user back to when something goes wrong.
-  // Prefer the slug if we have it; fall back to /browse.
   const backHref = slug ? `/product/${slug}` : '/browse';
 
   if (!UUID_RE.test(productId)) redirect('/browse');
@@ -106,8 +107,34 @@ export async function startConversation(formData: FormData): Promise<void> {
   const result = await getOrCreateConversation(productId);
 
   if ('error' in result) {
-    // Common case: user tried to chat about their own listing.
-    // Send them back to the product page instead of a 404.
+    redirect(backHref);
+  }
+
+  redirect(`/messages/${result.id}`);
+}
+
+export async function startUserConversation(
+  formData: FormData
+): Promise<void> {
+  const otherUserId = String(formData.get('userId') || '').trim();
+  const username = String(formData.get('username') || '').trim();
+
+  const backHref = username ? `/profile/${username}` : '/browse';
+
+  if (!UUID_RE.test(otherUserId)) redirect('/browse');
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect(`/login?next=${encodeURIComponent(backHref)}`);
+  }
+
+  const result = await getOrCreateUserConversation(otherUserId);
+
+  if ('error' in result) {
     redirect(backHref);
   }
 

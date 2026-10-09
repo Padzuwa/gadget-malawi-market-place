@@ -265,3 +265,62 @@ export async function getUnreadMessageCount(): Promise<number> {
 
   return count ?? 0;
 }
+/**
+ * Get or create the general conversation between the current user
+ * and another user (no product context). Used when a buyer clicks
+ * "Chat with seller" from a public profile page.
+ *
+ * Conversations with `product_id = null` are treated as one shared thread
+ * per (buyer, seller) pair — see the unique index on conversations.
+ */
+export async function getOrCreateUserConversation(
+  otherUserId: string
+): Promise<{ id: string } | { error: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: 'You must be signed in.' };
+  if (otherUserId === user.id) {
+    return { error: 'You cannot message yourself.' };
+  }
+
+  // Confirm the other user exists (RLS filters deleted accounts)
+  const { data: other } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('id', otherUserId)
+    .maybeSingle();
+
+  if (!other) return { error: 'User not found.' };
+
+  // Try to find an existing general thread
+  const { data: existing } = await supabase
+    .from('conversations')
+    .select('id')
+    .eq('buyer_id', user.id)
+    .eq('seller_id', otherUserId)
+    .is('product_id', null)
+    .maybeSingle();
+
+  if (existing) return { id: existing.id as string };
+
+  // Create new
+  const { data: created, error: insertError } = await supabase
+    .from('conversations')
+    .insert({
+      buyer_id: user.id,
+      seller_id: otherUserId,
+      product_id: null,
+    })
+    .select('id')
+    .single();
+
+  if (insertError || !created) {
+    console.error('getOrCreateUserConversation error:', insertError?.message);
+    return { error: 'Could not start conversation.' };
+  }
+
+  return { id: created.id as string };
+}
